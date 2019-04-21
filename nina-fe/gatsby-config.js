@@ -9,6 +9,20 @@ module.exports = {
     "gatsby-plugin-typescript",
 
     {
+      resolve: "gatsby-plugin-alias-imports",
+      options: {
+        alias: {
+          "../../theme.config": path.resolve(
+            "../node_modules/semantic-ui-less/theme.config.example"
+          ),
+
+          "@semantic-ui-less": path.resolve("../node_modules/semantic-ui-less")
+        },
+        extensions: []
+      }
+    },
+
+    {
       resolve: "gatsby-source-filesystem",
 
       options: {

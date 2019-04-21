@@ -1,12 +1,10 @@
-export const TOKEN_KEY = "resume_makr-token-key";
-export const SCHEMA_VERSION = "1.0"; // Must be a string.
-export const SCHEMA_VERSION_KEY = "resume_makr-apollo-schema-version";
-export const SCHEMA_KEY = "resume_makr-apollo-cache-persist";
-export const FIRST_LEVEL_CLASS = "app-container";
-export const SECOND_LEVEL_CLASS = "app-main";
-export const ALREADY_UPLOADED = "___ALREADY_UPLOADED___";
-export const SITE_TITLE = "Resume Makr";
-export const USER_KEY = "1554058206372----x-xxx---1554058219607";
+export const TOKEN_KEY = "nina-token-key";
+export const SCHEMA_VERSION = "0.0.1"; // Must be a string.
+export const SCHEMA_VERSION_KEY = "nina-apollo-schema-version";
+export const SCHEMA_KEY = "nina-apollo-cache-persist";
+export const USER_KEY = "@39?111688nina8391!43143";
+export const SITE_TITLE = "Nina";
+export const THEME_COLOR = "#ff5b00";
 
 // istanbul ignore next:
 export function makeSiteTitle(title: string) {

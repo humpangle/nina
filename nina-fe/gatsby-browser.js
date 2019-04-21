@@ -1,11 +1,11 @@
 import React from "react";
 import { ApolloProvider } from "react-apollo";
-import "semantic-ui-css-offline";
 import { HelmetProvider } from "react-helmet-async";
 
 import "./src/styles/globals.scss";
-import buildClientCache, { persistCache } from "./src/State/apollo-setup";
-import { ResumemakrProvider } from "./src/components/resumemakr";
+import "./src/styles/semantic.less";
+import { buildClientCache, persistCache } from "./src/apollo-setup";
+import { NinaProvider } from "./src/nina-context";
 import { RootHelmet } from "./src/components/root-helmet";
 
 export const wrapRootElement = ({ element }) => {
@@ -13,7 +13,7 @@ export const wrapRootElement = ({ element }) => {
 
   return (
     <ApolloProvider client={client}>
-      <ResumemakrProvider
+      <NinaProvider
         value={{
           client,
           cache,
@@ -25,7 +25,7 @@ export const wrapRootElement = ({ element }) => {
 
           {element}
         </HelmetProvider>
-      </ResumemakrProvider>
+      </NinaProvider>
     </ApolloProvider>
   );
 };

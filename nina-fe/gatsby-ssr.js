@@ -1,22 +1,20 @@
 import React from "react";
 import { ApolloProvider } from "react-apollo";
-import fetch from "isomorphic-fetch";
 import { HelmetProvider } from "react-helmet-async";
 
-import buildClientCache from "./src/State/apollo-setup";
-import { ResumemakrProvider } from "./src/components/resumemakr";
+import { buildClientCache } from "./src/apollo-setup";
+import { NinaProvider } from "./src/nina-context";
 import { RootHelmet } from "./src/components/root-helmet";
 
 export const wrapRootElement = ({ element }) => {
   const { client } = buildClientCache({
     isNodeJs: true,
-    uri: "/",
-    fetch
+    uri: "/"
   });
 
   return (
     <ApolloProvider client={client}>
-      <ResumemakrProvider
+      <NinaProvider
         value={{
           client
         }}
@@ -26,7 +24,7 @@ export const wrapRootElement = ({ element }) => {
 
           {element}
         </HelmetProvider>
-      </ResumemakrProvider>
+      </NinaProvider>
     </ApolloProvider>
   );
 };

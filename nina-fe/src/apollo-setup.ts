@@ -3,22 +3,19 @@ import { ApolloClient, Resolvers } from "apollo-client";
 import { ApolloLink, Operation } from "apollo-link";
 import { CachePersistor } from "apollo-cache-persist";
 import { onError } from "apollo-link-error";
-import * as AbsintheSocket from "@absinthe/socket";
-import { createAbsintheSocketLink } from "@absinthe/socket-apollo-link";
 import { HttpLink } from "apollo-link-http";
 
-import { getToken } from "./tokens";
-import { SCHEMA_VERSION, SCHEMA_VERSION_KEY, SCHEMA_KEY } from "../constants";
-import { getSocket } from "../socket";
-import CONN_MUTATION, { ConnMutData } from "./conn.mutation";
-import { initState, LocalState } from "./resolvers";
+import { getToken } from "./local-state/storage";
+import { initState, LocalState } from "./local-state/resolvers";
+import { SCHEMA_VERSION, SCHEMA_VERSION_KEY, SCHEMA_KEY } from "./constants";
+import { logGraphql } from "./logger";
 
 let cache: InMemoryCache;
 let client: ApolloClient<{}>;
 let persistor: CachePersistor<NormalizedCacheObject>;
 
 interface BuildClientCache {
-  uri?: string;
+  uri: string;
 
   headers?: { [k: string]: string };
 
@@ -26,21 +23,13 @@ interface BuildClientCache {
    * are we server side rendering?
    */
   isNodeJs?: boolean;
-
-  fetch?: GlobalFetch["fetch"];
 }
 
-function onConnChange(isConnected: boolean) {
-  client.mutate<ConnMutData, ConnMutData>({
-    mutation: CONN_MUTATION,
-    variables: {
-      isConnected
-    }
-  });
-}
+// tslint:disable-next-line: no-var-requires
+const fetch = require("isomorphic-fetch");
 
 export function buildClientCache(
-  { uri, headers, isNodeJs, fetch }: BuildClientCache = {} as BuildClientCache
+  { uri, headers, isNodeJs }: BuildClientCache = {} as BuildClientCache
 ) {
   if (!cache) {
     cache = new InMemoryCache({
@@ -49,29 +38,19 @@ export function buildClientCache(
   }
 
   if (!client || headers) {
+    let link: ApolloLink = new HttpLink({
+      uri,
+      fetch
+    });
+
+    link = middlewareAuthLink(headers).concat(link);
+    link = middlewareErrorLink().concat(link);
+    link = middlewareLoggerLink(link);
+
     let resolvers = {} as Resolvers;
     let defaultState = {} as LocalState;
-    let link: ApolloLink;
 
-    if (isNodeJs) {
-      /**
-       * we do not use phoenix websocket. we use plain http
-       */
-
-      link = new HttpLink({
-        uri,
-        fetch
-      });
-    } else {
-      const absintheSocket = AbsintheSocket.create(
-        getSocket({ onConnChange, uri })
-      );
-
-      link = createAbsintheSocketLink(absintheSocket);
-      link = middlewareAuthLink(headers).concat(link);
-      link = middlewareErrorLink().concat(link);
-      link = middlewareLoggerLink(link);
-
+    if (!isNodeJs) {
       const state = initState();
       resolvers = state.resolvers;
       defaultState = state.defaultState;
@@ -92,8 +71,6 @@ export function buildClientCache(
 
   return { client, cache };
 }
-
-export default buildClientCache;
 
 export type PersistCacheFn = (
   appCache: InMemoryCache
@@ -135,12 +112,6 @@ export const resetClientAndPersistor = async (
   await appPersistor.resume();
 };
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-////////////////////////// HELPER FUNCTIONS ///////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
 function middlewareAuthLink(headers: { [k: string]: string } = {}) {
   return new ApolloLink((operation, forward) => {
     const token = getToken() || headers.jwt;
@@ -157,10 +128,10 @@ function middlewareAuthLink(headers: { [k: string]: string } = {}) {
   });
 }
 
-const getNow = () => {
-  const n = new Date();
-  return `${n.getHours()}:${n.getMinutes()}:${n.getSeconds()}`;
-};
+// const getNow = () => {
+//   const n = new Date();
+//   return `${n.getHours()}:${n.getMinutes()}:${n.getSeconds()}`;
+// };
 
 function middlewareLoggerLink(link: ApolloLink) {
   if (process.env.NODE_ENV === "production") {
@@ -175,14 +146,7 @@ function middlewareLoggerLink(link: ApolloLink) {
   const logger = new ApolloLink((operation, forward) => {
     const operationName = `Apollo operation: ${operation.operationName}`;
 
-    // tslint:disable-next-line:no-console
-    console.log(
-      "\n\n\n",
-      getNow(),
-      `=============================${operationName}========================\n`,
-      processOperation(operation),
-      `\n=========================End ${operationName}=========================`
-    );
+    logGraphql(operationName, processOperation(operation));
 
     if (!forward) {
       return null;
@@ -192,14 +156,7 @@ function middlewareLoggerLink(link: ApolloLink) {
 
     if (fop.map) {
       return fop.map(response => {
-        // tslint:disable-next-line:no-console
-        console.log(
-          "\n\n\n",
-          getNow(),
-          `==============Received response from ${operationName}============\n`,
-          response,
-          `\n==========End Received response from ${operationName}=============`
-        );
+        logGraphql(operationName, response, true);
         return response;
       });
     }
@@ -212,36 +169,18 @@ function middlewareLoggerLink(link: ApolloLink) {
 
 function middlewareErrorLink() {
   return onError(({ graphQLErrors, networkError, response, operation }) => {
-    // tslint:disable-next-line:ban-types
-    const logError = (errorName: string, obj: Object) => {
-      if (process.env.NODE_ENV === "production") {
-        return;
-      }
-
-      const operationName = `[${errorName} error] from Apollo operation: ${
-        operation.operationName
-      }`;
-
-      // tslint:disable-next-line:no-console
-      console.error(
-        "\n\n\n",
-        getNow(),
-        `============================${operationName}=======================\n`,
-        obj,
-        `\n====================End ${operationName}============================`
-      );
-    };
+    const { operationName } = operation;
 
     if (graphQLErrors) {
-      logError("Response", graphQLErrors);
+      logGraphql(operationName, graphQLErrors, "graphQLErrors");
     }
 
     if (response) {
-      logError("Response", response);
+      logGraphql(operationName, response);
     }
 
     if (networkError) {
-      logError("Network", networkError);
+      logGraphql(operationName, networkError, "networkError");
     }
   });
 }

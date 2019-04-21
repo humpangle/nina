@@ -4,9 +4,7 @@ module.exports = {
   coverageDirectory: "./coverage",
   coveragePathIgnorePatterns: [
     "/node_modules/",
-    "<rootDir>/src/__tests__/test_utils.tsx",
-    "<rootDir>/src/refresh-to-app.ts",
-    "<rootDir>/src/State/get-conn-status.ts",
+    "<rootDir>/src/__tests__/utils.tsx",
     "<rootDir>/src/logger.ts"
   ],
   coverageReporters: ["json", "lcov", "text", "clover"],
@@ -36,5 +34,10 @@ module.exports = {
   testURL: "http://localhost",
   setupFiles: ["<rootDir>/loadershim.js"],
   setupFilesAfterEnv: ["<rootDir>/setup-tests.js"],
-  watchPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/cypress"]
+  watchPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/cypress/",
+    "<rootDir>/package.json",
+    "<rootDir>/gatsby-*"
+  ]
 };
