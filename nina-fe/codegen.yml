@@ -1,0 +1,11 @@
+overwrite: true
+schema: "./../nina-be/src/graphql/schema.graphql.ts"
+require: ts-node/register/transpile-only
+documents: "src/graphql/**"
+generates:
+  src/apollo-generated.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+      - "fragment-matcher"

@@ -1,0 +1,21 @@
+overwrite: true
+schema: "./src/graphql/schema.graphql.ts"
+require: ts-node/register/transpile-only
+generates:
+  ./src/apollo.generated.ts:
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+    config:
+      contextType: ./server-setup#NinaContext
+      mappers:
+        User: ./data/user#User
+        Credential: ./data/credential#Credential
+        # Shop: ./data/shop#Shop
+        # Product: ./data/product#Product
+        # ProductGeneral: ./data/product-general#ProductGeneral
+        # PriceList: ./data/price-list/PriceList
+        # Purchase: ./data/purchase/Purchase
+        # Purchasing: ./data/purchasing/Purchasing
+      scalars:
+        Date: Date

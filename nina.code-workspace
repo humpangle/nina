@@ -1,0 +1,17 @@
+{
+  "folders": [
+    // {
+    // 	"path": "be",
+    // 	"name": "BACKEND"
+    // },
+    // {
+    // 	"path": "fe",
+    // 	"name": "FRONTEND"
+    // },
+    {
+      "path": ".",
+      "name": "BACKEND-FRONTEND"
+    }
+  ],
+  "settings": {}
+}
