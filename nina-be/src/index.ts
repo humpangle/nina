@@ -1,9 +1,10 @@
 // tslint:disable: no-console
-import { createConnection, Connection } from "typeorm";
+import { createConnection, Connection, ConnectionOptions } from "typeorm";
 import Graceful from "node-graceful";
 import { Server } from "http";
 
 import { setupServer } from "./server-setup";
+import connOpts from "../ormconfig";
 
 const PORT = process.env.PORT || "";
 
@@ -13,7 +14,7 @@ if (!PORT) {
 
 (async function startApp() {
   try {
-    const connection = await createConnection();
+    const connection = await createConnection(connOpts as ConnectionOptions);
     const { webServer } = setupServer(connection);
 
     webServer.listen(PORT, () => {

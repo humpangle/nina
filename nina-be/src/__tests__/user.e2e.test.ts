@@ -1,10 +1,11 @@
-import { Connection, createConnection } from "typeorm";
+import { Connection } from "typeorm";
 
 import {
   startLiveTestServer,
   CREATE_USER_MUTATION,
   USER_CREATION_ARGS,
-  LOGIN_USER_MUTATION
+  LOGIN_USER_MUTATION,
+  connectToDb
 } from "./utils";
 import { setupServer } from "../server-setup";
 import { MutationCreateUserArgs, MutationLoginArgs } from "../apollo.generated";
@@ -116,7 +117,7 @@ describe("login user", () => {
 
 async function setup(useDb: boolean = true) {
   connection = (useDb
-    ? await createConnection()
+    ? await connectToDb()
     : { close: jest.fn() }) as Connection;
   const { webServer } = setupServer(connection);
   const { stop, doQuery } = startLiveTestServer(webServer);

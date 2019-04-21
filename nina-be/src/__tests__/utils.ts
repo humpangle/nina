@@ -5,7 +5,10 @@ import { HttpLink } from "apollo-link-http";
 import fetch from "node-fetch";
 import { toPromise, execute, GraphQLRequest } from "apollo-link";
 import gql from "graphql-tag";
+import { createConnection, ConnectionOptions } from "typeorm";
+
 import { CreateUserInput } from "../apollo.generated";
+import connOpts from "../../ormconfig";
 
 export const USER_CREATION_ARGS: CreateUserInput = {
   username: "john",
@@ -48,4 +51,8 @@ export function startLiveTestServer(webServer: Server) {
       return toPromise(execute(link, operation));
     }
   };
+}
+
+export function connectToDb() {
+  return createConnection(connOpts as ConnectionOptions);
 }

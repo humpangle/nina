@@ -1,4 +1,4 @@
-import { Connection, createConnection } from "typeorm";
+import { Connection } from "typeorm";
 
 import {
   createUser,
@@ -8,13 +8,13 @@ import {
   resetPassword
 } from "../data/models";
 import { PASSWORD_TOO_SHORT_ERROR } from "../data/user";
-import { USER_CREATION_ARGS } from "./utils";
+import { USER_CREATION_ARGS, connectToDb } from "./utils";
 import { idToJwt } from "../data/jwt";
 
 let connection: Connection;
 
 beforeEach(async () => {
-  connection = await createConnection();
+  connection = await connectToDb();
 });
 
 afterEach(() => {
