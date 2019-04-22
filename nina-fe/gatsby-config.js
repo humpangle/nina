@@ -13,10 +13,8 @@ module.exports = {
       options: {
         alias: {
           "../../theme.config": path.resolve(
-            "../node_modules/semantic-ui-less/theme.config.example"
-          ),
-
-          "@semantic-ui-less": path.resolve("../node_modules/semantic-ui-less")
+            "src/styles/semantic-theme/theme.config"
+          )
         },
         extensions: []
       }

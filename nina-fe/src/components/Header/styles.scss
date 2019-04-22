@@ -106,6 +106,8 @@ $menu-transition-timing: 500ms;
     overflow: hidden;
     padding: 1em;
     margin: 0 !important;
+    z-index: 1;
+    border: none !important;
 
     &.enter {
       top: $menu-transition-start-top;
@@ -151,14 +153,7 @@ $menu-transition-timing: 500ms;
   .header__menu-item--sign-up-link {
     display: block;
     margin-right: -1em;
-    background: transparent;
-    color: $app-color;
+    // background: transparent;
     border: 2px solid $app-color;
-
-    &.active,
-    &:hover {
-      background: $app-color;
-      color: #fff;
-    }
   }
 }

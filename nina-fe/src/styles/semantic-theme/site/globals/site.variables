@@ -1,0 +1,6 @@
+/*******************************
+     User Global Variables
+*******************************/
+@appColor: #ff5b00;
+@focusedFormBorderColor: #f7a97e;
+@hoveredTextColor: #fff;

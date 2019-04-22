@@ -1,0 +1,6 @@
+@downBackgroundColor: @appColor;
+@backgroundColor: none;
+@hoverBackgroundColor: @appColor;
+@activeColor: #fff;
+@downColor: #fff;
+@textColor: @appColor;

@@ -2,7 +2,7 @@ import React from "react";
 import { ApolloProvider } from "react-apollo";
 import { HelmetProvider } from "react-helmet-async";
 
-import "./src/styles/semantic.less";
+import "./src/styles/semantic-theme/semantic.less";
 import "./src/styles/globals.scss";
 import { buildClientCache, persistCache } from "./src/apollo-setup";
 import { NinaProvider } from "./src/nina-context";
