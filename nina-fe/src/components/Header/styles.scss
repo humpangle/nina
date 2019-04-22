@@ -1,5 +1,9 @@
 @import "../../styles/variables";
 
+$menu-transition-start-top: 5px;
+$menu-transition-end-top: 25px;
+$menu-transition-timing: 500ms;
+
 .components-header {
   position: relative;
   padding-top: 5px;
@@ -9,6 +13,17 @@
   border-bottom: 1px solid #e1e1e1;
   transition: background-color 0.3s ease;
   width: 100%;
+  height: 55px;
+
+  .header-navs {
+    margin-left: 1em !important;
+    margin-right: 1em !important;
+  }
+
+  .header__logo {
+    z-index: 2;
+    margin: 0 !important;
+  }
 
   .td-cssicon-cross {
     height: 1.5rem;
@@ -58,7 +73,7 @@
   .header__menu-toggle {
     border-radius: 50px !important;
     padding: 9px 8px !important;
-    margin: 0 15px 0 0 !important;
+    margin: 0 !important;
     transition: background-color 0.25s ease !important;
     z-index: 2;
 
@@ -84,10 +99,35 @@
   .header__menu {
     width: 100% !important;
     position: absolute;
-    top: 25px;
+    top: $menu-transition-end-top;
     border: none;
     border-radius: 0;
     box-shadow: none !important;
+    overflow: hidden;
+    padding: 1em;
+    margin: 0 !important;
+
+    &.enter {
+      top: $menu-transition-start-top;
+      opacity: 0;
+    }
+
+    &.enter-active {
+      top: $menu-transition-end-top;
+      opacity: 1;
+      transition: all $menu-transition-timing;
+    }
+
+    &.exit {
+      opacity: 1;
+      top: $menu-transition-end-top;
+    }
+
+    &.exit-active {
+      top: $menu-transition-start-top;
+      opacity: 0;
+      transition: all $menu-transition-timing;
+    }
   }
 
   .header__menu-item {

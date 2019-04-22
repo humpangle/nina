@@ -4,7 +4,7 @@ module.exports = {
   coverageDirectory: "./coverage",
   coveragePathIgnorePatterns: [
     "/node_modules/",
-    "<rootDir>/src/__tests__/utils.tsx",
+    "<rootDir>/src/__tests__/utils-",
     "<rootDir>/src/logger.ts"
   ],
   coverageReporters: ["json", "lcov", "text", "clover"],
@@ -38,6 +38,7 @@ module.exports = {
     "<rootDir>/node_modules/",
     "<rootDir>/cypress/",
     "<rootDir>/package.json",
-    "<rootDir>/gatsby-*"
+    "<rootDir>/gatsby-*",
+    "<rootDir>/src/pages/"
   ]
 };

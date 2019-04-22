@@ -8,6 +8,14 @@ import { Header } from "../components/Header/header-x";
 import { headerUiText, Props } from "../components/Header/header";
 import { LogoImageQuery_file_childImageSharp_fixed } from "../graphql/gatsby/types/LogoImageQuery";
 
+jest.mock("react-transition-group", function() {
+  const FakeTransition = jest.fn(({ children }) => children);
+  const FakeCSSTransition = jest.fn(props =>
+    props.in ? <FakeTransition>{props.children}</FakeTransition> : null
+  );
+  return { CSSTransition: FakeCSSTransition, Transition: FakeTransition };
+});
+
 type P = React.ComponentType<Partial<Props>>;
 const HeaderP = Header as P;
 

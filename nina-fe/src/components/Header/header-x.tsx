@@ -3,6 +3,7 @@ import { Menu, Button } from "semantic-ui-react";
 import parseClassnames from "classnames";
 import { Link } from "gatsby";
 import { WindowLocation } from "@reach/router";
+import { CSSTransition } from "react-transition-group";
 
 import "./styles.scss";
 import { headerUiText, Props } from "./header";
@@ -25,7 +26,7 @@ export function Header(props: Props) {
 
   return (
     <div className="components-header">
-      <Menu secondary={true}>
+      <Menu secondary={true} className="header-navs">
         <>
           <style>
             {`#components-header-logo{ background: url(${
@@ -42,6 +43,7 @@ export function Header(props: Props) {
             {...logoCompAttrs}
           />
         </>
+
         <Menu.Menu position="right">
           <Menu.Item
             as="a"
@@ -59,8 +61,13 @@ export function Header(props: Props) {
         </Menu.Menu>
       </Menu>
 
-      {isMenuOpen && (
-        <Menu vertical={true} className="header__menu">
+      <CSSTransition
+        in={isMenuOpen}
+        timeout={500}
+        className="header__menu"
+        unmountOnExit={true}
+      >
+        <Menu vertical={true}>
           <Menu.Item className="header__menu-item">
             {headerUiText.menuTexts.howItWorks}
           </Menu.Item>
@@ -79,7 +86,7 @@ export function Header(props: Props) {
             </Button>
           </Menu.Item>
         </Menu>
-      )}
+      </CSSTransition>
     </div>
   );
 }
