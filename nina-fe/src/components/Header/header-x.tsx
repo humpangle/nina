@@ -81,6 +81,7 @@ export function Header(props: Props) {
               className="header__menu-item--sign-up-link"
               as={Link}
               to="/"
+              basic={true}
             >
               {headerUiText.menuTexts.signUp}
             </Button>

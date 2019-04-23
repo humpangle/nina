@@ -82,7 +82,7 @@ export function Signup(props: Props) {
           label={formUiTexts.repeatPassword}
         />
 
-        <Button type="submit" basic={true}>
+        <Button type="submit" primary={true}>
           {signupUiTexts.form.submitBtnText}
         </Button>
       </Form>
