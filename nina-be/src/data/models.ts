@@ -2,7 +2,7 @@ import { Connection } from "typeorm";
 import { UserInputError } from "apollo-server-core";
 
 import { CreateUserInput, LoginInput, Credential } from "../apollo.generated";
-import { User, CreateUserValidator, PasswordValidator } from "./user";
+import { User, CreateUserValidator, makePasswordValidator } from "./user";
 import {
   dbCreateUser,
   dbLogin,
@@ -75,7 +75,7 @@ export async function resetPassword(
   { token, password }: { token: string; password: string }
 ) {
   try {
-    PasswordValidator.validateSync(password);
+    makePasswordValidator().validateSync(password);
   } catch ({ errors }) {
     throw new UserInputError(INVALID_INPUT_ERROR_TITLE, { errors });
   }

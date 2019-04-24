@@ -14,6 +14,13 @@ export interface User extends Timestamps {
   jwt?: string | null;
 }
 
+export enum userDataLen {
+  usernameMin = 3,
+  usernameMax = 15,
+  passwordMin = 5,
+  passwordMax = 20
+}
+
 export const userEntityColumnMapping: { [k in keyof User]: string } = {
   id: "id",
   username: "username",
@@ -29,30 +36,50 @@ export const userTableName = "users";
 
 export const PASSWORD_TOO_SHORT_ERROR = "must be at least 5 characters";
 
-export const PasswordValidator = Yup.string()
-  .required()
-  .min(5, PASSWORD_TOO_SHORT_ERROR)
-  .max(20);
+// tslint:disable-next-line: no-any
+export function makePasswordValidator(errorMessage?: any): Yup.StringSchema {
+  return Yup.string()
+    .required(errorMessage && errorMessage.required)
+    .min(
+      userDataLen.passwordMin,
+      (errorMessage && errorMessage.min) || PASSWORD_TOO_SHORT_ERROR
+    )
+    .max(userDataLen.passwordMax, errorMessage && errorMessage.max);
+}
 
-export const CreateUserSchemaDefinition: Yup.ObjectSchemaDefinition<
-  CreateUserInput
-> = {
-  username: Yup.string()
-    .required()
-    .min(3)
-    .max(15),
+export function makeCreateUserSchemaDefinition(
+  // tslint:disable-next-line: no-any
+  errorMessages: { [k in keyof CreateUserInput]?: any } = {}
+): Yup.ObjectSchemaDefinition<CreateUserInput> {
+  return {
+    username: Yup.string()
+      .required(errorMessages.username && errorMessages.username.required)
+      .min(
+        userDataLen.usernameMin,
+        errorMessages.username &&
+          (errorMessages.username.min || errorMessages.username.required)
+      )
+      .max(
+        userDataLen.usernameMax,
+        errorMessages.username &&
+          (errorMessages.username.max || errorMessages.username.required)
+      ),
 
-  email: Yup.string()
-    .required()
-    .email(),
+    email: Yup.string()
+      .required(errorMessages.email && errorMessages.email.required)
+      .email(
+        errorMessages.email &&
+          (errorMessages.email.email || errorMessages.email.required)
+      ),
 
-  firstName: Yup.string(),
+    firstName: Yup.string(),
 
-  lastName: Yup.string(),
+    lastName: Yup.string(),
 
-  password: PasswordValidator
-};
+    password: makePasswordValidator(errorMessages.password)
+  };
+}
 
 export const CreateUserValidator = Yup.object<CreateUserInput>().shape<
   CreateUserInput
->(CreateUserSchemaDefinition);
+>(makeCreateUserSchemaDefinition());
