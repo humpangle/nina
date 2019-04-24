@@ -1,4 +1,4 @@
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 
 import { Signup as Comp } from "./signup-x";
 import {
@@ -9,6 +9,7 @@ import {
   REGISTER_USER_MUTATION,
   RegisterUserMutationProps
 } from "../../graphql/register-user.mutation";
+import { userLocalMutationGql } from "../../local-state/user.local.mutation";
 
 const createUserGql = graphql<
   {},
@@ -22,4 +23,7 @@ const createUserGql = graphql<
     }
 });
 
-export const Signup = createUserGql(Comp);
+export const Signup = compose(
+  createUserGql,
+  userLocalMutationGql
+)(Comp);

@@ -27,7 +27,7 @@ export type UserLocalMutationFn = MutationFn<
 >;
 
 export interface UserLocalMutationProps {
-  updateLocalUser?: UserLocalMutationFn;
+  updateLocalUser: UserLocalMutationFn;
 }
 
 export const userLocalMutationGql = graphql<

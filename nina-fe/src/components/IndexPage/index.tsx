@@ -1,21 +1,23 @@
 import React from "react";
 
+import "./styles.scss";
 import { useSetupCachePersistor } from "../../nina-context";
 import { Header } from "../Header";
 import { Signup } from "../Signup";
+import { RouteComponentProps } from "@reach/router";
 
-export function IndexPage() {
+export function IndexPage(props: RouteComponentProps) {
   useSetupCachePersistor();
 
   return (
-    <div className="index-page">
+    <div className="components-index-page">
       <Header />
 
-      <div className="main" style={{ margin: "0 1em" }}>
+      <div className="main">
         <h2>Organize your purse</h2>
         <h3>Do more with less</h3>
 
-        <Signup />
+        <Signup {...props} />
       </div>
     </div>
   );

@@ -1,5 +1,3 @@
-const URL_SOCKET = "/socket";
-
 export const getBackendUrls = (uri?: string) => {
   const apiUrl = uri || process.env.API_URL;
 
@@ -11,7 +9,6 @@ export const getBackendUrls = (uri?: string) => {
 
   return {
     apiUrl: url.href,
-    websocketUrl: new URL(URL_SOCKET, url.origin).href.replace("http", "ws"),
     root: url.origin
   };
 };

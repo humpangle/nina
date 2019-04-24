@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { MutationFn } from "react-apollo";
+import { MutationFn, DataProps } from "react-apollo";
 
 import { REGISTER_USER_FRAGMENT } from "./register-user.fragment";
 import {
@@ -18,6 +18,11 @@ export const REGISTER_USER_MUTATION = gql`
 `;
 
 export type RegisterUserMutationFn = MutationFn<
+  RegisterUserMutation,
+  RegisterUserMutationVariables
+>;
+
+export type RegisterUserMutationResolved = DataProps<
   RegisterUserMutation,
   RegisterUserMutationVariables
 >;
