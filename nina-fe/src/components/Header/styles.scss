@@ -14,6 +14,7 @@ $menu-transition-timing: 500ms;
   transition: background-color 0.3s ease;
   width: 100%;
   height: 55px;
+  flex-shrink: 0;
 
   .header-navs {
     margin-left: 1em !important;
@@ -25,7 +26,7 @@ $menu-transition-timing: 500ms;
     margin: 0 !important;
   }
 
-  .td-cssicon-cross {
+  .td-css-icon-cross {
     height: 1.5rem;
     width: 1.5rem;
     transition: color 0.2s ease, transform 0.3s ease,
@@ -48,7 +49,7 @@ $menu-transition-timing: 500ms;
     }
   }
 
-  .td-cssicon-cross__y {
+  .td-css-icon-cross__y {
     transition: inherit;
     display: flex;
     -webkit-box-pack: center;
@@ -83,13 +84,13 @@ $menu-transition-timing: 500ms;
   }
 
   .header__menu-toggle--is-open {
-    .td-cssicon-cross {
+    .td-css-icon-cross {
       &::before {
         transform: rotate(45deg);
       }
     }
 
-    .td-cssicon-cross__y {
+    .td-css-icon-cross__y {
       &::before {
         transform: rotate(45deg);
       }

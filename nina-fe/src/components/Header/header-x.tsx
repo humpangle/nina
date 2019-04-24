@@ -54,8 +54,8 @@ export function Header(props: Props) {
             data-testid="header__menu-toggle"
             onClick={isMenuOpenCb}
           >
-            <div className="td-cssicon-cross">
-              <div className="td-cssicon-cross__y" />
+            <div className="td-css-icon-cross">
+              <div className="td-css-icon-cross__y" />
             </div>
           </Menu.Item>
         </Menu.Menu>
