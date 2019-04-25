@@ -1,6 +1,6 @@
-import { SITE_TITLE } from "../../src/constants";
-import * as inputReg from "../../src/__tests__/utils-sign-up";
-import { CreateUserInput } from "../../src/apollo-generated";
+import { SITE_TITLE } from "@nina/fe/src/constants";
+import * as inputReg from "@nina/fe/src/__tests__/utils-sign-up";
+import { CreateUserInput } from "@nina/fe/src/apollo-generated";
 
 const TEST_USER: CreateUserInput = {
   username: "john",

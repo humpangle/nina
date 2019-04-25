@@ -1,5 +1,5 @@
 {
-  "name": "nina-fe",
+  "name": "@nina/fe",
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
@@ -25,6 +25,7 @@
     "cy-run-staging": "cypress run --config baseUrl=http://localhost:3985/"
   },
   "dependencies": {
+    "@nina/be": "0.0.1",
     "apollo-boost": "0.3.1",
     "apollo-cache-persist": "0.1.1",
     "classnames": "2.2.6",
@@ -46,7 +47,6 @@
     "gatsby-transformer-sharp": "2.1.18",
     "isomorphic-fetch": "2.2.1",
     "lodash-es": "4.17.11",
-    "nina-be": "0.0.1",
     "react": "16.9.0-alpha.0",
     "react-apollo": "2.5.4",
     "react-dom": "16.9.0-alpha.0",

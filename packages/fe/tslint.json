@@ -16,6 +16,8 @@
     "object-literal-key-quotes": false,
     "jsx-curly-spacing": "always",
     "jsx-no-lambda": false,
-    "only-arrow-functions": false
+    "only-arrow-functions": false,
+    "interface-over-type-literal": false,
+    "array-type": false
   }
 }

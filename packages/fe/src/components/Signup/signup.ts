@@ -10,7 +10,7 @@ import { CreateUserInput } from "../../apollo-generated";
 import {
   makeCreateUserSchemaDefinition,
   userDataLen
-} from "../../../../nina-be/src/data/user";
+} from "@nina/be/src/data/user";
 import { UserLocalMutationProps } from "../../local-state/user.local.mutation";
 
 export interface Props

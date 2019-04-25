@@ -1,17 +1,8 @@
 {
   "folders": [
     {
-      "path": "nina-be",
-      "name": "BACKEND"
-    },
-    {
-      "path": "nina-fe",
-      "name": "FRONTEND"
+      "path": "."
     }
-    // {
-    //   "path": ".",
-    //   "name": "BACKEND-FRONTEND"
-    // }
   ],
   "settings": {}
 }

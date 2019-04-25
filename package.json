@@ -1,7 +1,6 @@
 {
   "private": true,
   "workspaces": [
-    "nina-be",
-    "nina-fe"
+    "packages/*"
   ]
 }
