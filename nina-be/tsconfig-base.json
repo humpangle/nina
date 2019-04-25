@@ -69,5 +69,10 @@
 
   "include": ["src"],
 
-  "exclude": ["node_modules/", "coverage/", "src/__tests__/"]
+  "exclude": [
+    "node_modules/",
+    "coverage/",
+    "src/__tests__/",
+    "src/apollo.generated.ts"
+  ]
 }

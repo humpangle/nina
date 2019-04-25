@@ -8,11 +8,11 @@
     "url": "https://github.com/kanmii/nina"
   },
   "scripts": {
-    "start": "yarn typeorm migration:run && node build/index.js",
+    "start": "yarn typeorm migration:run && node build/src/index.js",
     "start-all": "concurrently \"yarn generate-watch\" \"yarn start-dev\"",
     "start-dev": "nodemon --verbose --exec \"yarn dev\" ",
     "start-debug": "nodemon --exec \"yarn debug\" ",
-    "start-staging": "yarn build && env-cmd .env-staging yarn typeorm migration:run && env-cmd .env-staging node build/index.js",
+    "start-staging": "yarn build && env-cmd .env-staging yarn typeorm migration:run && env-cmd .env-staging node build/src/index.js",
     "dev": "env-cmd .env-dev ts-node src/index.ts",
     "predev": "env-cmd .env-dev yarn run-migrations",
     "debug": "env-cmd .env-dev node --inspect --debug-brk -r ts-node/register src/index.ts",
