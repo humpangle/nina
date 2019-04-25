@@ -3,6 +3,6 @@
   "ignoreTestFiles": "*.js",
   "video": false,
   "env": {
-    "apiUri": "http://127.0.0.1:4987/graphql"
+    "apiUri": "http://127.0.0.1:4985/graphql"
   }
 }
