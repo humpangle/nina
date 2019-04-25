@@ -13,24 +13,22 @@ import {
 } from "../components/Signup/signup";
 import { fillField } from "./utils";
 import { CreateUserInput } from "../apollo-generated";
-import { APP_ROOT } from "../routing";
+import { APP_WELCOME_PATH } from "../routing";
 import { ApolloError } from "apollo-client";
 import { GraphQLError } from "graphql";
 import { RegisterUserMutationResolved } from "../graphql/register-user.mutation";
+import {
+  lastNameInputReg,
+  usernameInputReg,
+  emailInputReg,
+  passwordInputReg,
+  repeatPasswordInputReg,
+  submitBtnTextReg,
+  firstNameInputReg
+} from "./utils-sign-up";
 
 type P = React.ComponentType<Partial<Props>>;
 const SignupP = Signup as P;
-
-const firstNameInputReg = new RegExp(signupUiTexts.form.firstName as any, "i");
-const lastNameInputReg = new RegExp(signupUiTexts.form.lastName as any, "i");
-const usernameInputReg = new RegExp(signupUiTexts.form.username, "i");
-const emailInputReg = new RegExp(signupUiTexts.form.email, "i");
-const passwordInputReg = new RegExp(signupUiTexts.form.password, "i");
-const repeatPasswordInputReg = new RegExp(
-  signupUiTexts.form.repeatPassword,
-  "i"
-);
-const submitBtnTextReg = new RegExp(signupUiTexts.form.submitBtnText, "i");
 
 it("renders form errors", async () => {
   /**
@@ -234,7 +232,7 @@ it("submits successfully", async () => {
    * And we should be redirected to the app root page
    */
 
-  expect(mockNavigate).toBeCalledWith(APP_ROOT);
+  expect(mockNavigate).toBeCalledWith(APP_WELCOME_PATH);
 });
 
 function renderComp() {

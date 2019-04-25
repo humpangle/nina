@@ -3,6 +3,7 @@ import { Form, Button, Input, Icon, Message, Card } from "semantic-ui-react";
 import { Formik, FormikProps, Field } from "formik";
 import { NavigateFn } from "@reach/router";
 import lodashIsEmpty from "lodash/isEmpty";
+import { Link } from "gatsby";
 
 import "./styles.scss";
 import {
@@ -17,7 +18,7 @@ import {
   FormFieldProps
 } from "./signup";
 import { noOp } from "../../constants";
-import { APP_ROOT } from "../../routing";
+import { APP_WELCOME_PATH, APP_PATH } from "../../routing";
 import { RegisterUserFragment } from "../../apollo-generated";
 
 const RenderInput = memo(RenderInputFn, RenderInputFnComp);
@@ -61,7 +62,7 @@ export function Signup(props: Props) {
           variables: { user }
         });
 
-        (navigate as NavigateFn)(APP_ROOT);
+        (navigate as NavigateFn)(APP_WELCOME_PATH);
       } catch (apolloErrors) {
         dispatch({ serverErrors: objectifyApolloError(apolloErrors) });
       }
@@ -143,6 +144,17 @@ export function Signup(props: Props) {
               {signupUiTexts.form.submitBtnText}
             </Button>
           </Form>
+        </Card.Content>
+
+        <Card.Content
+          extra={true}
+          style={{
+            marginTop: "35px"
+          }}
+        >
+          <Button basic={true} fluid={true} as={Link} to={APP_PATH}>
+            Already have an account? Login
+          </Button>
         </Card.Content>
       </Card>
     );

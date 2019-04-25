@@ -9,7 +9,7 @@ export const THEME_COLOR = "#ff5b00";
 // istanbul ignore next:
 export function makeSiteTitle(title: string) {
   // istanbul ignore next:
-  return `${title} | ${SITE_TITLE}`;
+  return `${title}: ${SITE_TITLE}`;
 }
 
 // istanbul ignore next:
