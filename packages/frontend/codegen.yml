@@ -1,0 +1,13 @@
+overwrite: true
+require:
+  - ts-node/../../packages/fe/codegen-interpreter.ts
+generates:
+  src/apollo-generated.ts:
+    schema: "../common/src/graphql/schema.graphql.ts"
+    documents: "src/graphql/*.ts"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+    config:
+      scalars:
+        Date: Date

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es6",
+    "module": "commonjs",
+    "lib": ["es2018", "esnext.asynciterable", "dom"],
+    "declaration": true,
+    "outDir": "dist",
+    "importHelpers": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "noImplicitReturns": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    // "isolatedModules": true,
+    "noEmitHelpers": true
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules/", "coverage/", "src/__tests__/"]
+}
