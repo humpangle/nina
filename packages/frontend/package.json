@@ -16,7 +16,7 @@
     "start-build-staging": "yarn build:staging && yarn start:staging",
     "start:staging": "serve --no-clipboard --listen 3985 public",
     "generate": "graphql-codegen --config codegen.yml",
-    "gen-gatsby-types": "apollo codegen:generate --endpoint=http://localhost:3987/___graphql --tagName=graphql --target=typescript --includes=src/**/*.ts* --outputFlat=src/graphql/gatsby/types",
+    "gen-gatsby-types": "apollo codegen:generate --endpoint=http://localhost:3987/___graphql --tagName=graphql --target=typescript --includes=src/components/**/*.ts* --outputFlat=src/graphql/gatsby-types",
     "test": "env-cmd .env-dev jest --watch --runInBand",
     "test:coverage": "env-cmd .env-dev jest --coverage --runInBand",
     "test-e2e-run-staging": "start-server-and-test start-build-staging :3985 cy-run-staging",
