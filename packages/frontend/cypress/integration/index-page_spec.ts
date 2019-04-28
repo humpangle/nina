@@ -9,13 +9,13 @@ const TEST_USER: CreateUserInput = {
 };
 
 describe("index page", function() {
-  // beforeEach(() => {
-  //   cy.checkoutSession();
-  // });
+  beforeEach(() => {
+    cy.task("createConnection");
+  });
 
-  // afterEach(() => {
-  //   cy.closeSession();
-  // });
+  afterEach(() => {
+    cy.task("closeConnection");
+  });
 
   it("loads successfully", function() {
     /**

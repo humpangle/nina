@@ -4,22 +4,22 @@ import { UserInputError } from "apollo-server-core";
 import {
   CreateUserInput,
   LoginInput,
-  Credential
-} from "@nina/common/src/graphql/types";
-import { User, CreateUserValidator, makePasswordValidator } from "@nina/common";
+  Credential,
+  User,
+  CreateUserValidator,
+  makePasswordValidator,
+  INVALID_INPUT_ERROR_TITLE,
+  INVALID_LOGIN_INPUT_ERROR
+} from "@nina/common";
 import {
   dbCreateUser,
   dbLogin,
   dbGetUserById,
   dbGetUserByEmail,
   dbUpdateCredential
-} from "./typeorm";
+} from ".";
 import { verifyHashSync, hashSync } from "./utils";
 import { idToJwt, userFromJwt } from "./jwt";
-import {
-  INVALID_INPUT_ERROR_TITLE,
-  INVALID_LOGIN_INPUT_ERROR
-} from "@nina/common";
 
 export const getUserById = dbGetUserById;
 
@@ -33,7 +33,12 @@ export async function createUser(
     throw new UserInputError(INVALID_INPUT_ERROR_TITLE, { errors });
   }
 
-  return await dbCreateUser(connection, input);
+  const { password, ...rest } = input;
+
+  return await dbCreateUser(connection, {
+    ...rest,
+    encryptedToken: hashSync(password)
+  });
 }
 
 export async function login(
@@ -51,7 +56,8 @@ export async function login(
   }
 
   if (
-    !verifyHashSync(password, (user.credential as Credential).encryptedToken)
+    !verifyHashSync(password, (user.credential as Credential)
+      .encryptedToken as string)
   ) {
     throw new UserInputError(INVALID_LOGIN_INPUT_ERROR);
   }

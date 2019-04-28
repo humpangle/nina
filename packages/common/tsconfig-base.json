@@ -4,7 +4,6 @@
     "target": "es6",
     "module": "commonjs",
     "lib": ["es2018", "esnext.asynciterable", "dom"],
-    "declaration": true,
     "outDir": "dist",
     "importHelpers": true,
     "strict": false,

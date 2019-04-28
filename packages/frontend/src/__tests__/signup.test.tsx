@@ -12,7 +12,7 @@ import {
   formUiTexts
 } from "../components/Signup/signup";
 import { fillField } from "./utils";
-import { CreateUserInput } from "@nina/common";
+import { CreateUserInput } from "../apollo-generated";
 import { APP_WELCOME_PATH } from "../routing";
 import { ApolloError } from "apollo-client";
 import { GraphQLError } from "graphql";
@@ -233,6 +233,45 @@ it("submits successfully", async () => {
    */
 
   expect(mockNavigate).toBeCalledWith(APP_WELCOME_PATH);
+});
+
+it("renders non JSON parse-able error", async () => {
+  /**
+   * Given that we are using the sign up component
+   */
+  const { ui, mockRegisterUser, mockNavigate } = renderComp();
+
+  const errorMessage = "some error message";
+
+  mockRegisterUser.mockRejectedValue(
+    new ApolloError({
+      graphQLErrors: [new GraphQLError(errorMessage)]
+    })
+  );
+
+  const { getByText, getByLabelText, queryByText } = render(ui);
+
+  /**
+   * And we do not see texts indicating error occurred
+   */
+  expect(queryByText(errorMessage)).not.toBeInTheDocument();
+
+  /**
+   * When we complete and submit the form
+   */
+  fillAndSubmitForm(getByLabelText, getByText);
+
+  /**
+   * Then we should see error
+   */
+  const $error = await waitForElement(() => getByText(errorMessage));
+
+  expect($error).toBeInTheDocument();
+
+  /**
+   * And we should not be redirected
+   */
+  expect(mockNavigate).not.toBeCalled();
 });
 
 function renderComp() {

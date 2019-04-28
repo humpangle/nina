@@ -10,23 +10,31 @@ import {
   PASSWORD_TOO_SHORT_ERROR,
   INVALID_LOGIN_INPUT_ERROR
 } from "@nina/common";
-import { USER_CREATION_ARGS, connectToDb } from "./utils";
+import { USER_CREATION_ARGS, DB_USER_CREATION_ARGS } from "./utils";
 import { idToJwt } from "../data/jwt";
 
-let connection: Connection;
+jest.mock("@nina/typeorm/dist/context");
 
-beforeEach(async () => {
-  connection = await connectToDb();
-});
+import {
+  dbCreateUser,
+  dbLogin,
+  dbGetUserById,
+  dbGetUserByEmail,
+  dbUpdateCredential
+} from "@nina/typeorm/dist/context";
+import { hashSync } from "../data/utils";
 
-afterEach(() => {
-  if (connection) {
-    connection.close();
-  }
-});
+const mockDbCreateUser = dbCreateUser as jest.Mock;
+const mockDbLogin = dbLogin as jest.Mock;
+const mockDbGetUserById = dbGetUserById as jest.Mock;
+const mockDbGetUserByEmail = dbGetUserByEmail as jest.Mock;
+const mockDbUpdateCredential = dbUpdateCredential as jest.Mock;
+
+const connection = (jest.fn() as unknown) as Connection;
 
 describe("user creation", () => {
   it("succeeds", async () => {
+    mockDbCreateUser.mockResolvedValue({ id: 1 });
     /**
      * When we create a user
      */
@@ -37,11 +45,6 @@ describe("user creation", () => {
      * Then created user's id should be defined
      */
     expect(user.id).toBeDefined();
-
-    /**
-     * And created user's encrypted token should be null
-     */
-    expect(user.credential.encryptedToken).toBeNull();
   });
 
   it("fails due to validation error", () => {
@@ -61,12 +64,10 @@ describe("user creation", () => {
   });
 
   it("fails due to database error", async () => {
+    mockDbCreateUser.mockRejectedValue({
+      message: '{"username":"already exists."}'
+    });
     expect.assertions(1);
-
-    /**
-     * Given a user already exists
-     */
-    await createUser(connection, USER_CREATION_ARGS);
 
     /**
      * When we try to create user with the same username
@@ -79,14 +80,15 @@ describe("user creation", () => {
 });
 
 describe("user login", () => {
-  const wrongData = [{ username: "john1" }, { email: "a1@b.com" }];
+  const resolvedUser = {
+    id: 1,
+    username: "john",
+    email: "a@b.com",
+    credential: { encryptedToken: DB_USER_CREATION_ARGS.encryptedToken }
+  };
 
   it("succeeds with username only", async () => {
-    /**
-     * Given a user exists in the system
-     */
-    await createUser(connection, USER_CREATION_ARGS);
-
+    mockDbLogin.mockResolvedValue(resolvedUser);
     /**
      * When we login with only username
      */
@@ -102,10 +104,7 @@ describe("user login", () => {
   });
 
   it("succeeds with email only", async () => {
-    /**
-     * Given a user exists in the system
-     */
-    await createUser(connection, USER_CREATION_ARGS);
+    mockDbLogin.mockResolvedValue(resolvedUser);
 
     /**
      * When we login with only email
@@ -122,10 +121,7 @@ describe("user login", () => {
   });
 
   it("succeeds with both username and email", async () => {
-    /**
-     * Given a user exists in the system
-     */
-    await createUser(connection, USER_CREATION_ARGS);
+    mockDbLogin.mockResolvedValue(resolvedUser);
 
     /**
      * When we login with both username and email
@@ -154,10 +150,10 @@ describe("user login", () => {
   });
 
   it("fails if wrong password provided", async () => {
-    /**
-     * Given a user exists in the system
-     */
-    await createUser(connection, USER_CREATION_ARGS);
+    mockDbLogin.mockResolvedValue({
+      credential: { encryptedToken: hashSync("1") }
+    });
+    expect.assertions(1);
 
     /**
      * When we login with wrong password,
@@ -172,28 +168,9 @@ describe("user login", () => {
     });
   });
 
-  it("fails if username or email not found in the database", async () => {
-    const index = Math.round(Math.random());
-
-    /**
-     * When we login with non existing username/email
-     * Then we should get an error
-     */
-    return login(connection, {
-      ...wrongData[index],
-      password: "12345"
-    }).catch(error => {
-      expect(error.message).toEqual(INVALID_LOGIN_INPUT_ERROR);
-    });
-  });
-
-  it("fails if one of username or email is wrong", async () => {
-    /**
-     * Given a user exists in the system
-     */
-    await createUser(connection, USER_CREATION_ARGS);
-
-    const index = Math.round(Math.random());
+  it("fails if db returns null for user", async () => {
+    mockDbLogin.mockResolvedValue(null);
+    expect.assertions(1);
 
     /**
      * When we login with both username and email, but one of these is wrong,
@@ -202,8 +179,7 @@ describe("user login", () => {
     return login(connection, {
       username: "john",
       email: "a@b.com",
-      password: "12345",
-      ...wrongData[index]
+      password: "12345"
     }).catch(error => {
       expect(error.message).toEqual(INVALID_LOGIN_INPUT_ERROR);
     });
@@ -212,10 +188,7 @@ describe("user login", () => {
 
 describe("user password recovery", () => {
   it("gets recovery token successfully", async () => {
-    /**
-     * Given that a user exists in the system
-     */
-    await createUser(connection, USER_CREATION_ARGS);
+    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
 
     /**
      * When we ask for password recover token
@@ -229,6 +202,7 @@ describe("user password recovery", () => {
   });
 
   it("does not get a token because email not found in db", async () => {
+    mockDbGetUserByEmail.mockResolvedValue(null);
     /**
      * Given we ask for password recovery token for a non existent email
      */
@@ -240,11 +214,13 @@ describe("user password recovery", () => {
   });
 
   it("resets password successfully", async () => {
-    expect.assertions(3);
+    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
+    mockDbGetUserById.mockResolvedValue({ id: 1 });
+    mockDbUpdateCredential.mockResolvedValue(true);
+
     /**
      * Given our request for password reset token was successful
      */
-    const user1 = await createUser(connection, USER_CREATION_ARGS);
     const token = await getPasswordRecoveryToken(connection, "a@b.com");
 
     /**
@@ -254,25 +230,8 @@ describe("user password recovery", () => {
       token,
       password: "23456"
     });
+
     expect(result).toBe(true);
-
-    /**
-     * Then we should not be able to login with old password
-     */
-    try {
-      await login(connection, { password: "12345", email: "a@b.com" });
-    } catch (error) {
-      expect(error.message).toEqual(INVALID_LOGIN_INPUT_ERROR);
-    }
-
-    /**
-     * And we should be able to login with new password
-     */
-    const user2 = await login(connection, {
-      password: "23456",
-      email: "a@b.com"
-    });
-    expect(user1.id).toEqual(user2.id);
   });
 
   it("does not reset password because of wrong token", async () => {
@@ -283,6 +242,7 @@ describe("user password recovery", () => {
       token: "does not exist",
       password: "does not matter"
     });
+
     /**
      * Then we should get false
      */
@@ -290,10 +250,11 @@ describe("user password recovery", () => {
   });
 
   it("does not reset password because token expires", async () => {
+    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
+
     /**
      * Given our request for password reset token was successful
      */
-    await createUser(connection, USER_CREATION_ARGS);
     const token = await getPasswordRecoveryToken(connection, "a@b.com", "0.5");
 
     /**
@@ -311,11 +272,12 @@ describe("user password recovery", () => {
   });
 
   it("does not reset password because password is invalid", async () => {
+    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
+
     expect.assertions(1);
     /**
      * Given our request for password reset token was successful
      */
-    await createUser(connection, USER_CREATION_ARGS);
     const token = await getPasswordRecoveryToken(connection, "a@b.com");
 
     /**
@@ -332,6 +294,8 @@ describe("user password recovery", () => {
   });
 
   it("does not reset password because user not found", async () => {
+    mockDbGetUserById.mockResolvedValue(null);
+
     /**
      * Given our request for password reset token was successful
      */

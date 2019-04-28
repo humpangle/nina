@@ -7,11 +7,11 @@ import { SemanticICONS } from "semantic-ui-react";
 
 import { RegisterUserMutationProps } from "../../graphql/register-user.mutation";
 import {
-  CreateUserInput,
   makeCreateUserSchemaDefinition,
   userDataLen
-} from "@nina/common";
+} from "@nina/common/dist/data/user";
 import { UserLocalMutationProps } from "../../local-state/user.local.mutation";
+import { CreateUserInput } from "../../apollo-generated";
 
 export interface Props
   extends RegisterUserMutationProps,
@@ -102,18 +102,25 @@ export function objectifyApolloError(
     return { networkError: signupUiTexts.networkError, graphQLError: {} };
   }
 
-  const graphQLError = Object.entries(
-    JSON.parse(graphQLErrors[0].message)
-  ).reduce(
-    (acc, [key, val]) => {
-      acc[key] = formUiTexts[key] + " " + val;
+  const { message } = graphQLErrors[0];
 
-      return acc;
-    },
-    {} as FormErrors
-  );
+  try {
+    const graphQLError = Object.entries(JSON.parse(message)).reduce(
+      (acc, [key, val]) => {
+        acc[key as keyof FormErrors] =
+          formUiTexts[key as keyof FormErrors] + " " + val;
 
-  return { graphQLError, networkError: "" };
+        return acc;
+      },
+      {} as FormErrors
+    );
+
+    return { graphQLError, networkError: "" };
+  } catch (error) {
+    // in case the graphql error message is not JSON parse-able, we simply
+    // return it as network error
+    return { networkError: message, graphQLError: {} };
+  }
 }
 
 export interface FormFieldProps extends FieldProps<FormValues> {

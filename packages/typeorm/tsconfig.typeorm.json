@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "sourceMap": false,
+    "noImplicitAny": true
+  },
+  "files": ["./src/ormconfig.dev.ts"]
+}

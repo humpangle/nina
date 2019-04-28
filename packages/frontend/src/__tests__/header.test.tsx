@@ -6,7 +6,7 @@ import { WindowLocation } from "@reach/router";
 
 import { Header } from "../components/Header/header-x";
 import { headerUiText, Props } from "../components/Header/header";
-import { LogoImageQuery_file_childImageSharp_fixed } from "../graphql/gatsby/types/LogoImageQuery";
+import { LogoImageQuery_file_childImageSharp_fixed } from "../graphql/gatsby-types/LogoImageQuery";
 
 jest.mock("react-transition-group", function() {
   const FakeTransition = jest.fn(({ children }) => children);

@@ -1,6 +1,6 @@
 import { RouteComponentProps } from "@reach/router";
 
-import { LogoImageQuery_file_childImageSharp_fixed } from "../../graphql/gatsby/types/LogoImageQuery";
+import { LogoImageQuery_file_childImageSharp_fixed } from "../../graphql/gatsby-types/LogoImageQuery";
 
 export interface OwnProps {
   leftMenuItems?: JSX.Element[];

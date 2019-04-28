@@ -9,5 +9,6 @@ export {
   MutationResolvers,
   CreateUserInput,
   MutationCreateUserArgs,
-  MutationLoginArgs
+  MutationLoginArgs,
+  LoginInput
 } from "./graphql/types";

@@ -4,6 +4,7 @@ import { Connection } from "typeorm";
 import { ID, DEFAULT_JWT_EXPIRATION } from "@nina/common";
 import { getUserById } from "./models";
 
+// istanbul ignore next
 const SECRET = process.env.SECRET || "";
 
 // istanbul ignore next

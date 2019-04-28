@@ -8,7 +8,8 @@
       "cypress",
       "cypress-testing-library/typings",
       "cypress-file-upload",
-      "typeorm"
+      "typeorm",
+      "node"
     ]
   },
   "include": ["node_modules/cypress", "**/*.ts"]

@@ -1,14 +1,8 @@
 import { Connection } from "typeorm";
-import {
-  Credential as OriginalCredential,
-  ID,
-  User,
-  CreateUserInput
-} from "@nina/common";
-import { UserEntity } from "../../entity/user";
-import { CredentialEntity } from "../../entity/credential";
-import { hashSync } from "../utils";
+import { Credential as OriginalCredential, ID, User } from "@nina/common";
 import { normalizeDbError } from "./utils";
+import { UserEntity } from "../entity/user";
+import { CredentialEntity } from "../entity/credential";
 
 type Credential = OriginalCredential & {
   __user__: User | null; // added by typeorm leftJoinAndSelect
@@ -24,7 +18,7 @@ function getCredentialRepo(connection: Connection) {
 
 export async function createUser(
   connection: Connection,
-  { password, ...input }: CreateUserInput
+  { encryptedToken, ...input }: CreateUserDbInput
 ): Promise<User> {
   try {
     const user = await getUserRepo(connection).save(input);
@@ -32,7 +26,7 @@ export async function createUser(
     const repo = getCredentialRepo(connection);
 
     const credential = (await repo.save<Partial<Credential>>({
-      encryptedToken: hashSync(password)
+      encryptedToken
     })) as Credential;
 
     await repo
@@ -130,4 +124,10 @@ export async function updateCredential(
     .execute();
 
   return raw.length === 0 ? false : true;
+}
+
+export interface CreateUserDbInput {
+  username: string;
+  email: string;
+  encryptedToken: string;
 }

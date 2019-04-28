@@ -1,0 +1,24 @@
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "node",
+  coverageDirectory: "./coverage",
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "<rootDir>/src/resolvers/interfaces.resolver.ts",
+    "<rootDir>/src/migration/",
+    "<rootDir>/src/winston-logger.ts",
+    "<rootDir>/src/ormconfig.js"
+  ],
+  coverageReporters: ["json", "lcov", "text", "clover"],
+  testPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/src/.+?db.test.ts"
+  ],
+  testRegex: "src/__tests__/.+?\\.test\\.ts$",
+  globals: {
+    __PATH_PREFIX__: "",
+    "ts-jest": {
+      tsConfig: "./tsconfig-base.json"
+    }
+  }
+};

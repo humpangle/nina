@@ -5,15 +5,23 @@ import { HttpLink } from "apollo-link-http";
 import fetch from "node-fetch";
 import { toPromise, execute, GraphQLRequest } from "apollo-link";
 import gql from "graphql-tag";
-import { createConnection, ConnectionOptions } from "typeorm";
+import { createConnection } from "typeorm";
 
 import { CreateUserInput } from "@nina/common";
-import connOpts from "../ormconfig";
+import { makeTypeormConfig } from "@nina/typeorm";
+import { CreateUserDbInput } from "@nina/typeorm/dist/context/user";
+import { hashSync } from "../data/utils";
 
 export const USER_CREATION_ARGS: CreateUserInput = {
   username: "john",
   email: "a@b.com",
   password: "12345"
+};
+
+export const DB_USER_CREATION_ARGS: CreateUserDbInput = {
+  username: "john",
+  email: "a@b.com",
+  encryptedToken: hashSync("12345")
 };
 
 export const CREATE_USER_MUTATION = gql`
@@ -54,5 +62,5 @@ export function startLiveTestServer(webServer: Server) {
 }
 
 export function connectToDb() {
-  return createConnection(connOpts as ConnectionOptions);
+  return createConnection(makeTypeormConfig());
 }

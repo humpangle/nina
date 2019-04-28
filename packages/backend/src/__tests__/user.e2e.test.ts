@@ -5,7 +5,8 @@ import {
   CREATE_USER_MUTATION,
   USER_CREATION_ARGS,
   LOGIN_USER_MUTATION,
-  connectToDb
+  connectToDb,
+  DB_USER_CREATION_ARGS
 } from "./utils";
 import { setupServer } from "../server-setup";
 import {
@@ -14,7 +15,7 @@ import {
   MutationCreateUserArgs,
   MutationLoginArgs
 } from "@nina/common";
-import { createUser } from "../data/models";
+import { dbCreateUser } from "../data";
 
 let connection: Connection;
 let stopServer: () => void;
@@ -75,7 +76,7 @@ describe("login user", () => {
      * Given there is a user in the system
      */
     const { query } = await setup();
-    const user = await createUser(connection, USER_CREATION_ARGS);
+    const user = await dbCreateUser(connection, DB_USER_CREATION_ARGS);
 
     /**
      * When we login the user
