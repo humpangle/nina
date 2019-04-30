@@ -7,7 +7,8 @@ module.exports = {
     "<rootDir>/src/resolvers/interfaces.resolver.ts",
     "<rootDir>/src/migration/",
     "<rootDir>/src/winston-logger.ts",
-    "<rootDir>/src/ormconfig.js"
+    "<rootDir>/src/make-ormconfig.ts",
+    "<rootDir>/src/ormconfig.ts"
   ],
   coverageReporters: ["json", "lcov", "text", "clover"],
   testPathIgnorePatterns: [

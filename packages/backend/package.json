@@ -8,24 +8,19 @@
     "url": "https://github.com/kanmii/nina"
   },
   "scripts": {
-    "start": "yarn typeorm migration:run && node dist/index.js",
+    "start": "node dist/index.js",
     "start:all": "nodemon --verbose --exec \"yarn dev\"",
     "start:debug": "nodemon --exec \"yarn debug\" ",
-    "start:staging": "yarn build && env-cmd staging yarn run:migrations && env-cmd staging node dist/index.js",
+    "start:staging": "yarn build && env-cmd staging node dist/index.js",
     "start:staging-test": "yarn build:test && env-cmd staging node dist/index.js",
     "dev": "env-cmd dev ts-node src/index.ts",
-    "predev": "env-cmd dev yarn run:migrations",
     "debug": "env-cmd dev node --inspect --debug-brk -r ts-node/register src/index.ts",
     "build": "tsc",
     "build:test": "tsc --build tsconfig-base.json",
     "prebuild": "rimraf dist",
-    "typeorm": "ts-node ../../node_modules/typeorm/cli.js --config ./src/ormconfig.js",
     "test:js": "yarn build:test && env-cmd staging-test jest --config jest.config.staging.js --runInBand",
     "test:watch": "env-cmd test jest --config jest.config.dev.js --runInBand --watch",
-    "test:coverage": "env-cmd test jest --config jest.config.dev.js --runInBand --coverage",
-    "run:migrations": "yarn typeorm migration:run",
-    "make:migration": "env-cmd dev yarn typeorm migration:generate -n",
-    "revert:migration": "yarn typeorm migration:revert"
+    "test:coverage": "env-cmd test jest --config jest.config.dev.js --runInBand --coverage"
   },
   "dependencies": {
     "@nina/common": "0.0.1",

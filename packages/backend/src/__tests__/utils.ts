@@ -8,7 +8,8 @@ import gql from "graphql-tag";
 import { createConnection } from "typeorm";
 
 import { CreateUserInput } from "@nina/common";
-import { makeTypeormConfig } from "@nina/typeorm";
+import { getTypeormConfigForConnection } from "@nina/typeorm/dist/make-ormconfig";
+
 import { CreateUserDbInput } from "@nina/typeorm/dist/context/user";
 import { hashSync } from "../data/utils";
 
@@ -62,5 +63,5 @@ export function startLiveTestServer(webServer: Server) {
 }
 
 export function connectToDb() {
-  return createConnection(makeTypeormConfig());
+  return createConnection(getTypeormConfigForConnection());
 }
