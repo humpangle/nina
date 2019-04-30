@@ -4,7 +4,7 @@ import {
   Credential,
   credentialTableName,
   credentialEntityColumnMapping
-} from "@nina/common";
+} from "@nina/common/dist/data/credential";
 import { TimestampsEntity, IdEntity } from "./utils";
 
 export const CredentialEntity = new EntitySchema<Credential>({

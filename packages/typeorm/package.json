@@ -13,17 +13,19 @@
     "prestart": "rimraf dist",
     "build": "tsc",
     "prebuild": "rimraf dist",
-    "typeorm": "tsc --outFile src/ormconfig.dev.js src/ormconfig.ts && ts-node ../../node_modules/typeorm/cli.js --config ./src/ormconfig.dev.js",
-    "test:js": "tsc && env-cmd staging-test jest --config jest.config.staging.js --runInBand",
+    "typeorm:cli": "ts-node ../../node_modules/typeorm/cli.js --config ./src/ormconfig.ts",
+    "typeorm:cli:js": "typeorm --config ./dist/ormconfig.js",
+    "test:js": "yarn build && env-cmd staging-test jest --config jest.config.staging.js --runInBand",
     "test:watch": "env-cmd test jest --config jest.config.dev.js --runInBand --watch",
     "test:coverage": "env-cmd test jest --config jest.config.dev.js --runInBand --coverage",
-    "run:migrations": "yarn typeorm migration:run",
-    "make:migration": "env-cmd dev yarn typeorm migration:generate -n",
-    "revert:migration": "yarn typeorm migration:revert"
+    "run:migrations": "yarn typeorm:cli migration:run",
+    "run:migrations:js": "yarn typeorm:cli:js migration:run",
+    "make:migration": "env-cmd dev yarn typeorm:cli migration:generate -n",
+    "revert:migration": "yarn typeorm:cli migration:revert"
   },
   "dependencies": {
     "@nina/common": "0.0.1",
-    "pg": "7.9.0",
+    "pg": "7.10.0",
     "reflect-metadata": "0.1.13",
     "tslib": "1.9.3",
     "typeorm": "0.2.16"

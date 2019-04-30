@@ -1,5 +1,6 @@
 import { EntitySchemaColumnOptions } from "typeorm";
-import { Timestamps } from "@nina/common";
+
+import { Timestamps } from "@nina/common/dist/data/utils";
 
 export const TimestampsEntity: {
   [k in keyof Timestamps]: EntitySchemaColumnOptions

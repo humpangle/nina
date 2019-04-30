@@ -1,7 +1,10 @@
-import "reflect-metadata";
 import { EntitySchema } from "typeorm";
 
-import { User, userEntityColumnMapping, userTableName } from "@nina/common";
+import {
+  User,
+  userEntityColumnMapping,
+  userTableName
+} from "@nina/common/dist/data/user";
 import { TimestampsEntity, IdEntity } from "./utils";
 
 export const UserEntity = new EntitySchema<User>({

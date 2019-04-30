@@ -1,6 +1,7 @@
-import { createConnection, ConnectionOptions } from "typeorm";
+import { createConnection } from "typeorm";
 
 import { CreateUserDbInput } from "../context/user";
+import { makeTypeormConfig } from "../make-ormconfig";
 
 export const USER_CREATION_ARGS: CreateUserDbInput = {
   username: "john",
@@ -9,5 +10,5 @@ export const USER_CREATION_ARGS: CreateUserDbInput = {
 };
 
 export function connectToDb() {
-  return createConnection(require("../ormconfig.dev") as ConnectionOptions);
+  return createConnection(makeTypeormConfig());
 }
