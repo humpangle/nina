@@ -22,7 +22,7 @@
     "test-e2e-run-staging": "start-server-and-test start:staging :3985 cy-run-staging",
     "test-e2e-open-staging": "start-server-and-test start:staging :3985 cy-open-staging",
     "cy-open-staging": "env-cmd staging-test cypress open --config baseUrl=http://localhost:3985/",
-    "cy-run-staging": "cypress run --config baseUrl=http://localhost:3985/"
+    "cy-run-staging": "env-cmd staging-test cypress run --config baseUrl=http://localhost:3985/"
   },
   "dependencies": {
     "@nina/common": "0.0.1",
