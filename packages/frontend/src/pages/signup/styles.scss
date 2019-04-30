@@ -1,0 +1,10 @@
+@import "../../styles/variables";
+
+.pages-signup {
+  @extend %page-main;
+
+  .main {
+    @extend %page-main-main;
+    padding: 1em 1em 0 1em;
+  }
+}

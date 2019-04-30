@@ -1,13 +1,10 @@
+@import "../../styles//variables";
+
 .components-index-page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+  @extend %page-main;
 
   .main {
     padding: 0 1em;
-    flex: 1;
-    overflow-x: hidden;
-    overflow-y: auto;
+    @extend %page-main-main;
   }
 }

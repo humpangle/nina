@@ -15,7 +15,8 @@ import {
   validationSchema,
   reducer,
   objectifyApolloError,
-  FormFieldProps
+  FormFieldProps,
+  makeSignupFormFieldErrorTestId
 } from "./signup";
 import { noOp } from "../../constants";
 import { APP_WELCOME_PATH, ROOT_PATH } from "../../routing";
@@ -205,6 +206,7 @@ function RenderInputFn({
           style={{
             marginTop: "8px"
           }}
+          data-testid={makeSignupFormFieldErrorTestId(name as keyof FormValues)}
         >
           <Icon name="warning circle" />
           {errors}

@@ -1,5 +1,6 @@
 import "cypress-testing-library/add-commands";
 import "cypress-file-upload";
+import { CreateUserInput } from "@nina/common/dist/graphql/types";
 
 declare global {
   namespace Cypress {
@@ -10,6 +11,8 @@ declare global {
       startSession: () => Chainable<Promise<void>>;
 
       stopSession: () => Chainable<Promise<void>>;
+
+      createUser: (userData: CreateUserInput) => Chainable<Promise<void>>;
     }
   }
 }
@@ -31,4 +34,8 @@ Cypress.Commands.add("startSession", () => {
 
 Cypress.Commands.add("stopSession", () => {
   cy.task("closeConnection");
+});
+
+Cypress.Commands.add("createUser", (userData: CreateUserInput) => {
+  cy.task("createUser", userData);
 });

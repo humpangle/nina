@@ -6,6 +6,7 @@ export const USER_KEY = "@39?111688nina8391!43143";
 export const SITE_TITLE = "Nina";
 export const THEME_COLOR = "#ff5b00";
 export const APP_WELCOME_TITLE = "Welcome";
+export const SIGNUP_TITLE = "Signup";
 
 // istanbul ignore next:
 export function makeSiteTitle(title: string) {

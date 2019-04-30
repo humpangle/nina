@@ -129,3 +129,7 @@ export interface FormFieldProps extends FieldProps<FormValues> {
   iconName: SemanticICONS;
   errors: string;
 }
+
+export function makeSignupFormFieldErrorTestId(name: keyof FormValues) {
+  return `${name}-field-error`;
+}

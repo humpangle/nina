@@ -5,6 +5,8 @@ const {
   getTypeormConfigForConnection
 } = require("@nina/typeorm/dist/make-ormconfig");
 
+const { createUser } = require("@nina/backend/dist/data/models");
+
 let conn;
 
 module.exports = (on, config) => {
@@ -23,6 +25,11 @@ module.exports = (on, config) => {
         conn.close();
       }
 
+      return null;
+    },
+
+    createUser: function createUserFn(userData) {
+      createUser(conn, userData);
       return null;
     }
   });

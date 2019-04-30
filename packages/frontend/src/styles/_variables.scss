@@ -5,3 +5,16 @@ $error-bg-color: #fff6f6;
 $success-color: #2c662d;
 $success-bg-color: #f8f8f9;
 $app-bg-color: #fff;
+
+%page-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+%page-main-main {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
