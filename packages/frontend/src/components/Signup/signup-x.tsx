@@ -18,7 +18,7 @@ import {
   FormFieldProps
 } from "./signup";
 import { noOp } from "../../constants";
-import { APP_WELCOME_PATH, APP_PATH } from "../../routing";
+import { APP_WELCOME_PATH, ROOT_PATH } from "../../routing";
 import { RegisterUserFragment } from "../../apollo-generated";
 
 const RenderInput = memo(RenderInputFn, RenderInputFnComp);
@@ -152,7 +152,7 @@ export function Signup(props: Props) {
             marginTop: "35px"
           }}
         >
-          <Button basic={true} fluid={true} as={Link} to={APP_PATH}>
+          <Button basic={true} fluid={true} as={Link} to={ROOT_PATH}>
             Already have an account? Login
           </Button>
         </Card.Content>
