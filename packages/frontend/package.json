@@ -12,6 +12,7 @@
     "build:staging": "yarn remove-folders && env-cmd staging yarn build",
     "build:production": "yarn remove-folders && env-cmd production yarn build",
     "develop": "yarn remove-folders && env-cmd dev gatsby develop --port 3987",
+    "develop:e2e": "yarn remove-folders && env-cmd staging-test gatsby develop --port 3985",
     "start": "yarn develop",
     "start-build-staging": "yarn build:staging && yarn start:staging",
     "start:staging": "serve --no-clipboard --listen 3985 public",
@@ -21,6 +22,7 @@
     "test:coverage": "env-cmd dev jest --coverage --runInBand",
     "test-e2e-run-staging": "start-server-and-test start:staging :3985 cy-run-staging",
     "test-e2e-open-staging": "start-server-and-test start:staging :3985 cy-open-staging",
+    "test-e2e-open-dev": "start-server-and-test develop:e2e :3985 cy-open-staging",
     "cy-open-staging": "env-cmd staging-test cypress open --config baseUrl=http://localhost:3985/",
     "cy-run-staging": "env-cmd staging-test cypress run --config baseUrl=http://localhost:3985/",
     "remove-folders": "rimraf public && rimraf .cache"

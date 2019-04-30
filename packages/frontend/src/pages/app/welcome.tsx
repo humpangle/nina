@@ -2,13 +2,13 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 import { Header } from "../../components/Header";
-import { makeSiteTitle } from "../../constants";
+import { makeSiteTitle, APP_WELCOME_TITLE } from "../../constants";
 
 export default function App() {
   return (
     <>
       <Helmet>
-        <title>{makeSiteTitle("Welcome")}</title>
+        <title>{makeSiteTitle(APP_WELCOME_TITLE)}</title>
       </Helmet>
 
       <div>

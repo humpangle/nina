@@ -1,4 +1,4 @@
-import { SITE_TITLE } from "@nina/frontend/src/constants";
+import { SITE_TITLE, APP_WELCOME_TITLE } from "@nina/frontend/src/constants";
 import * as inputReg from "@nina/frontend/src/__tests__/utils-sign-up";
 import { CreateUserInput } from "@nina/frontend/src/apollo-generated";
 
@@ -40,6 +40,6 @@ describe("index page", function() {
     /**
      * Then user should be redirected to the welcome page
      */
-    cy.title().should("contain", "Welcome");
+    cy.title().should("contain", APP_WELCOME_TITLE);
   });
 });
