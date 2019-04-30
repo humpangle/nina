@@ -12,7 +12,7 @@
     "start:all": "nodemon --verbose --exec \"yarn dev\"",
     "start:debug": "nodemon --exec \"yarn debug\" ",
     "start:staging": "yarn build && env-cmd staging node dist/index.js",
-    "start:staging-test": "yarn build:test && env-cmd staging node dist/index.js",
+    "start:staging-test": "yarn build:test && env-cmd staging-test node dist/index.js",
     "dev": "env-cmd dev ts-node src/index.ts",
     "debug": "env-cmd dev node --inspect --debug-brk -r ts-node/register src/index.ts",
     "build": "tsc",

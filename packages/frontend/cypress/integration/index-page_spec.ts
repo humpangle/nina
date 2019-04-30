@@ -10,11 +10,11 @@ const TEST_USER: CreateUserInput = {
 
 describe("index page", function() {
   beforeEach(() => {
-    cy.task("createConnection");
+    cy.startSession();
   });
 
   afterEach(() => {
-    cy.task("closeConnection");
+    cy.stopSession();
   });
 
   it("loads successfully", function() {

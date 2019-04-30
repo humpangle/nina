@@ -1,12 +1,14 @@
 const cypressTypeScriptPreprocessor = require("./cy-ts-preprocessor");
 const { createConnection } = require("typeorm");
 
-const { makeTypeormConfig } = require("@nina/typeorm/dist/ormconfig");
+const {
+  getTypeormConfigForConnection
+} = require("@nina/typeorm/dist/make-ormconfig");
 
 let conn;
 
 module.exports = (on, config) => {
-  const dbConfig = makeTypeormConfig(config.env);
+  const dbConfig = getTypeormConfigForConnection(config.env);
 
   on("file:preprocessor", cypressTypeScriptPreprocessor);
 

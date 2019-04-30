@@ -19,8 +19,8 @@
     "gen-gatsby-types": "apollo codegen:generate --endpoint=http://localhost:3987/___graphql --tagName=graphql --target=typescript --includes=src/components/**/*.ts* --outputFlat=src/graphql/gatsby-types",
     "test": "env-cmd dev jest --watch --runInBand",
     "test:coverage": "env-cmd dev jest --coverage --runInBand",
-    "test-e2e-run-staging": "start-server-and-test start-build-staging :3985 cy-run-staging",
-    "test-e2e-open-staging": "start-server-and-test start-build-staging :3985 cy-open-staging",
+    "test-e2e-run-staging": "start-server-and-test start:staging :3985 cy-run-staging",
+    "test-e2e-open-staging": "start-server-and-test start:staging :3985 cy-open-staging",
     "cy-open-staging": "env-cmd staging-test cypress open --config baseUrl=http://localhost:3985/",
     "cy-run-staging": "cypress run --config baseUrl=http://localhost:3985/"
   },
