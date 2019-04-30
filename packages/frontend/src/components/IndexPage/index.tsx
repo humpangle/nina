@@ -1,10 +1,10 @@
 import React from "react";
+import { RouteComponentProps } from "@reach/router";
 
 import "./styles.scss";
 import { useSetupCachePersistor } from "../../nina-context";
 import { Header } from "../Header";
 import { Signup } from "../Signup";
-import { RouteComponentProps } from "@reach/router";
 
 export function IndexPage(props: RouteComponentProps) {
   useSetupCachePersistor();
