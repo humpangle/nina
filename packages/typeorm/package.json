@@ -10,7 +10,9 @@
   },
   "scripts": {
     "start": "tsc -w",
+    "prestart": "rimraf dist",
     "build": "tsc",
+    "prebuild": "rimraf dist",
     "typeorm": "tsc --outFile src/ormconfig.dev.js src/ormconfig.ts && ts-node ../../node_modules/typeorm/cli.js --config ./src/ormconfig.dev.js",
     "test:js": "tsc && env-cmd staging-test jest --config jest.config.staging.js --runInBand",
     "test:watch": "env-cmd test jest --config jest.config.dev.js --runInBand --watch",
@@ -29,6 +31,7 @@
   "devDependencies": {
     "env-cmd": "8.0.2",
     "jest": "24.7.1",
+    "rimraf": "2.6.3",
     "ts-jest": "24.0.2",
     "ts-node": "8.0.3",
     "tslint": "5.15.0",
