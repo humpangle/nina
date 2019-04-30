@@ -2,11 +2,16 @@ import React from "react";
 import "jest-dom/extend-expect";
 import "react-testing-library/cleanup-after-each";
 import { render, fireEvent } from "react-testing-library";
-import { WindowLocation } from "@reach/router";
 
 import { Header } from "../components/Header/header-x";
-import { headerUiText, Props } from "../components/Header/header";
+import {
+  headerUiText,
+  Props,
+  headerMenuToggleTestId
+} from "../components/Header/header";
 import { LogoImageQuery_file_childImageSharp_fixed } from "../graphql/gatsby-types/LogoImageQuery";
+import { renderWithRouter } from "./utils";
+import { SIGNUP_PATH } from "../routing";
 
 jest.mock("react-transition-group", function() {
   const FakeTransition = jest.fn(({ children }) => children);
@@ -23,17 +28,18 @@ const logoAttrs = {} as LogoImageQuery_file_childImageSharp_fixed;
 
 it("toggles open and close menu", () => {
   const howSiteWorkRegexp = new RegExp(headerUiText.menuTexts.howItWorks, "i");
+  const { Ui } = renderWithRouter(HeaderP);
   /**
    * Given we have our header
    */
   const { queryByText, getByText, getByTestId } = render(
-    <HeaderP location={{} as WindowLocation} logoAttrs={logoAttrs} />
+    <Ui logoAttrs={logoAttrs} />
   );
 
   /**
    * Then we should see that menu toggle has no class showing it is opened
    */
-  const $menuToggle = getByTestId("header__menu-toggle");
+  const $menuToggle = getByTestId(headerMenuToggleTestId);
   expect($menuToggle.classList).not.toContain("header__menu-toggle--is-open");
 
   /**
@@ -62,16 +68,12 @@ it("does not show link tag on logo when we are on home page", () => {
   /**
    *  Given that we are on the home page
    */
+  const { Ui: Ui1 } = renderWithRouter(HeaderP);
 
   /**
    * And that we have the site header
    */
-  const { getByTestId, rerender } = render(
-    <HeaderP
-      location={{ pathname: "/" } as WindowLocation}
-      logoAttrs={logoAttrs}
-    />
-  );
+  const { getByTestId, rerender } = render(<Ui1 logoAttrs={logoAttrs} />);
 
   /**
    * Then we should see that the logo is not an anchor tag
@@ -81,15 +83,52 @@ it("does not show link tag on logo when we are on home page", () => {
   /**
    * When we navigate to another page
    */
-  rerender(
-    <HeaderP
-      location={{ pathname: "/a" } as WindowLocation}
-      logoAttrs={logoAttrs}
-    />
-  );
+  const { Ui: Ui2 } = renderWithRouter(HeaderP, { path: SIGNUP_PATH });
+  rerender(<Ui2 logoAttrs={logoAttrs} />);
 
   /**
    * Then the logo should now be an anchor tag
    */
   expect(getByTestId("header-logo").nodeName).toBe("A");
+});
+
+it("does not show signup link when we are on home page", () => {
+  /**
+   *  Given that we are on the home page
+   */
+  const { Ui: Ui1 } = renderWithRouter(HeaderP);
+
+  /**
+   * And that we have the site header
+   */
+  const { getByTestId, queryByText, rerender, getByText } = render(
+    <Ui1 logoAttrs={logoAttrs} />
+  );
+
+  /**
+   * When we click on the menu toggle button
+   */
+  fireEvent.click(getByTestId(headerMenuToggleTestId));
+
+  /**
+   * Then we should see the signup link
+   */
+  const text = headerUiText.menuTexts.signUp;
+  expect(getByText(text)).toBeInTheDocument();
+
+  /**
+   * When we navigate to another page
+   */
+  const { Ui: Ui2 } = renderWithRouter(HeaderP, { path: SIGNUP_PATH });
+  rerender(<Ui2 logoAttrs={logoAttrs} />);
+
+  /**
+   * And click on menu toggle button
+   */
+  fireEvent.click(getByTestId(headerMenuToggleTestId));
+
+  /**
+   * Then we should no longer see the sign up link
+   */
+  expect(queryByText(text)).not.toBeInTheDocument();
 });

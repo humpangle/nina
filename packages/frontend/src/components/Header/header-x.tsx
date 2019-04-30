@@ -6,8 +6,8 @@ import { WindowLocation } from "@reach/router";
 import { CSSTransition } from "react-transition-group";
 
 import "./styles.scss";
-import { headerUiText, Props } from "./header";
-import { ROOT_PATH } from "../../routing";
+import { headerUiText, Props, headerMenuToggleTestId } from "./header";
+import { ROOT_PATH, SIGNUP_PATH } from "../../routing";
 
 export function Header(props: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,10 +15,9 @@ export function Header(props: Props) {
   const { logoAttrs } = props;
 
   const location = props.location as WindowLocation;
+  const { pathname } = location;
   const logoCompAttrs =
-    location.pathname === ROOT_PATH
-      ? { as: "span" }
-      : { as: Link, to: ROOT_PATH };
+    pathname === ROOT_PATH ? { as: "span" } : { as: Link, to: ROOT_PATH };
 
   function isMenuOpenCb() {
     setIsMenuOpen(arg => !arg);
@@ -51,7 +50,7 @@ export function Header(props: Props) {
               "header__menu-toggle": true,
               "header__menu-toggle--is-open": isMenuOpen
             })}
-            data-testid="header__menu-toggle"
+            data-testid={headerMenuToggleTestId}
             onClick={isMenuOpenCb}
           >
             <div className="td-css-icon-cross">
@@ -76,16 +75,18 @@ export function Header(props: Props) {
             {headerUiText.menuTexts.logIn}
           </Menu.Item>
 
-          <Menu.Item className="header__menu-item ">
-            <Button
-              className="header__menu-item--sign-up-link"
-              as={Link}
-              to="/"
-              basic={true}
-            >
-              {headerUiText.menuTexts.signUp}
-            </Button>
-          </Menu.Item>
+          {pathname !== SIGNUP_PATH && (
+            <Menu.Item className="header__menu-item ">
+              <Button
+                className="header__menu-item--sign-up-link"
+                as={Link}
+                to={SIGNUP_PATH}
+                basic={true}
+              >
+                {headerUiText.menuTexts.signUp}
+              </Button>
+            </Menu.Item>
+          )}
         </Menu>
       </CSSTransition>
     </div>

@@ -20,3 +20,5 @@ export const headerUiText = {
 export interface WithLogo {
   logoAttrs: LogoImageQuery_file_childImageSharp_fixed;
 }
+
+export const headerMenuToggleTestId = "header__menu-toggle";
