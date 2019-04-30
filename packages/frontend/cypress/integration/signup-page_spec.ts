@@ -1,4 +1,4 @@
-import { APP_WELCOME_TITLE, SIGNUP_TITLE } from "@nina/frontend/src/constants";
+import { SIGNUP_TITLE } from "@nina/frontend/src/constants";
 import * as inputReg from "@nina/frontend/src/__tests__/utils-sign-up";
 import { TEST_USER } from "../support/utils";
 import {
