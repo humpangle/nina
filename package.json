@@ -5,7 +5,7 @@
   ],
   "scripts": {
     "test-e2e-open-staging": "concurrently \"yarn workspace @nina/backend start:staging-test\" \"yarn workspace @nina/frontend test-e2e-open-staging\"",
-    "start-common-typeorm": "concurrently \"yarn workspace @nina/common start\" \"yarn workspace @nina/typeorm start\""
+    "start-common-typeorm": "concurrently --kill-others-on-fail \"yarn workspace @nina/common start\" \"yarn workspace @nina/typeorm start\""
   },
   "devDependencies": {
     "concurrently": "4.1.0"
