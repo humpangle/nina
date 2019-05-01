@@ -1,9 +1,8 @@
 import React, { useReducer, memo } from "react";
 import { Form, Button, Input, Icon, Message, Card } from "semantic-ui-react";
 import { Formik, FormikProps, Field } from "formik";
-import { NavigateFn } from "@reach/router";
+import { NavigateFn, WindowLocation } from "@reach/router";
 import lodashIsEmpty from "lodash/isEmpty";
-import { Link } from "gatsby";
 
 import "./styles.scss";
 import {
@@ -19,8 +18,9 @@ import {
   makeSignupFormFieldErrorTestId
 } from "./signup";
 import { noOp } from "../../constants";
-import { APP_WELCOME_PATH, ROOT_PATH } from "../../routing";
+import { APP_WELCOME_PATH } from "../../routing";
 import { RegisterUserFragment } from "../../apollo-generated";
+import { SwitchAuthComponent } from "../SwitchAuthComponent";
 
 const RenderInput = memo(RenderInputFn, RenderInputFnComp);
 
@@ -153,9 +153,9 @@ export function Signup(props: Props) {
             marginTop: "35px"
           }}
         >
-          <Button basic={true} fluid={true} as={Link} to={ROOT_PATH}>
-            Already have an account? Login
-          </Button>
+          <SwitchAuthComponent
+            pathname={(props.location as WindowLocation).pathname}
+          />
         </Card.Content>
       </Card>
     );
