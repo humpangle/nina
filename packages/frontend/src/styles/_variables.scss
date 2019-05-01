@@ -18,3 +18,16 @@ $app-bg-color: #fff;
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+%auth-component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .card {
+    width: 100%;
+    max-width: 450px;
+    overflow-y: auto;
+  }
+}

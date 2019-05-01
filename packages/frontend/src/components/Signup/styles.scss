@@ -1,12 +1,5 @@
-.components-signup {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
+@import "../../styles/variables";
 
-  .card {
-    width: 100%;
-    max-width: 450px;
-    overflow-y: auto;
-  }
+.components-signup {
+  @extend %auth-component;
 }
