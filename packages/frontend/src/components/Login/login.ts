@@ -29,6 +29,7 @@ export const networkErrorString = "Network Error";
 export const loginErrorTestId = "login-error";
 export const loginHeader = "Log in to Nina";
 export const forgotPasswordLinkText = "Forgot password?";
+export const loginFormTestId = "login-form";
 
 export function makeFormFieldTestId(name: keyof FormValues) {
   return `form-field-${name}`;

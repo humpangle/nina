@@ -49,6 +49,8 @@ export const signupUiTexts = {
   networkError: "Unable to create your account: network error"
 };
 
+export const signupFormTestId = "signup-form";
+
 export interface FormValues extends CreateUserInput {
   repeatPassword: string;
 }

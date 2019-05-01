@@ -3,6 +3,7 @@ import { Formik, FormikProps, Field, FieldProps } from "formik";
 import { Form, Input, Button, Card, Message, Icon } from "semantic-ui-react";
 import { NavigateFn, WindowLocation } from "@reach/router";
 import { Link } from "gatsby";
+import makeClassnames from "classnames";
 
 import "./styles.scss";
 import {
@@ -17,7 +18,8 @@ import {
   loginErrorTestId,
   loginHeader,
   makeFormFieldTestId,
-  forgotPasswordLinkText
+  forgotPasswordLinkText,
+  loginFormTestId
 } from "./login";
 import { noOp } from "../../constants";
 import { APP_WELCOME_PATH, REQUEST_PASSWORD_RESET_PATH } from "../../routing";
@@ -40,8 +42,11 @@ export function Login(props: Props) {
       });
 
       const {
-        values: { usernameEmail, password }
+        values: { usernameEmail, password },
+        setSubmitting
       } = formProps;
+
+      setSubmitting(true);
 
       const { navigate, login, updateLocalUser } = props;
 
@@ -73,6 +78,8 @@ export function Login(props: Props) {
         (navigate as NavigateFn)(APP_WELCOME_PATH);
       } catch (errors) {
         const { networkError, graphqlError } = parseApolloError(errors);
+        setSubmitting(false);
+
         dispatch({
           networkError,
           graphqlError,
@@ -92,7 +99,13 @@ export function Login(props: Props) {
         </Card.Content>
 
         <Card.Content>
-          <Form onSubmit={onSubmit(formProps)}>
+          <Form
+            onSubmit={onSubmit(formProps)}
+            data-testid={loginFormTestId}
+            className={makeClassnames({
+              "form-submitting": formProps.isSubmitting
+            })}
+          >
             <Field
               name="usernameEmail"
               component={FormInput}

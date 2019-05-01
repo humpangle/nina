@@ -3,6 +3,7 @@ import { Form, Button, Input, Icon, Message, Card } from "semantic-ui-react";
 import { Formik, FormikProps, Field } from "formik";
 import { NavigateFn, WindowLocation } from "@reach/router";
 import lodashIsEmpty from "lodash/isEmpty";
+import makeClassnames from "classnames";
 
 import "./styles.scss";
 import {
@@ -15,7 +16,8 @@ import {
   reducer,
   objectifyApolloError,
   FormFieldProps,
-  makeSignupFormFieldErrorTestId
+  makeSignupFormFieldErrorTestId,
+  signupFormTestId
 } from "./signup";
 import { noOp } from "../../constants";
 import { APP_WELCOME_PATH } from "../../routing";
@@ -34,7 +36,8 @@ export function Signup(props: Props) {
         serverErrors: null
       });
 
-      const { values, validateForm } = formProps;
+      const { values, validateForm, setSubmitting } = formProps;
+      setSubmitting(true);
       const input = { ...values };
       delete input.repeatPassword;
 
@@ -43,6 +46,7 @@ export function Signup(props: Props) {
       const formErrors = await validateForm(values);
 
       if (!lodashIsEmpty(formErrors)) {
+        setSubmitting(false);
         dispatch({ formErrors });
 
         return;
@@ -65,6 +69,7 @@ export function Signup(props: Props) {
 
         (navigate as NavigateFn)(APP_WELCOME_PATH);
       } catch (apolloErrors) {
+        setSubmitting(false);
         dispatch({ serverErrors: objectifyApolloError(apolloErrors) });
       }
     };
@@ -81,7 +86,13 @@ export function Signup(props: Props) {
         </Card.Content>
 
         <Card.Content>
-          <Form onSubmit={onSubmit(formProps)}>
+          <Form
+            onSubmit={onSubmit(formProps)}
+            data-testid={signupFormTestId}
+            className={makeClassnames({
+              "form-submitting": formProps.isSubmitting
+            })}
+          >
             <Field
               name="firstName"
               type="text"

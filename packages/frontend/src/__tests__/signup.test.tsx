@@ -9,7 +9,8 @@ import {
   Props,
   signupUiTexts,
   formErrorTexts,
-  formUiTexts
+  formUiTexts,
+  signupFormTestId
 } from "../components/Signup/signup";
 import { fillField, renderWithRouter } from "./utils";
 import { CreateUserInput } from "../apollo-generated";
@@ -272,6 +273,43 @@ it("renders non JSON parse-able error", async () => {
    * And we should not be redirected
    */
   expect(mockNavigate).not.toBeCalled();
+});
+
+it("blurs form while submitting", async () => {
+  /**
+   * Given that we are using the sign up component
+   */
+  const { ui } = renderComp();
+
+  const { getByText, getByTestId } = render(ui);
+
+  /**
+   * Then the form should not be blurred
+   */
+  const $form = getByTestId(signupFormTestId);
+  expect($form.classList).not.toContain("form-submitting");
+
+  /**
+   * When we submit the form
+   */
+  fireEvent.click(getByText(signupUiTexts.form.submitBtnText));
+
+  /**
+   * Then the form should be blurred
+   */
+  expect($form.classList).toContain("form-submitting");
+
+  /**
+   * And a while later the form should no longer be blurred
+   */
+  await wait(
+    () => {
+      expect($form.classList).not.toContain("form-submitting");
+    },
+    {
+      interval: 1
+    }
+  );
 });
 
 function renderComp() {

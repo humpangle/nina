@@ -30,4 +30,9 @@ $app-bg-color: #fff;
     max-width: 450px;
     overflow-y: auto;
   }
+
+  .form-submitting {
+    pointer-events: none;
+    opacity: 0.6;
+  }
 }

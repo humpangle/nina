@@ -11,7 +11,8 @@ import {
   loginSubmitButtonText,
   networkErrorString,
   forgotPasswordLinkText,
-  makeFormFieldTestId
+  makeFormFieldTestId,
+  loginFormTestId
 } from "../components/Login/login";
 import { renderWithRouter, fillField } from "./utils";
 import { APP_WELCOME_PATH } from "../routing";
@@ -278,6 +279,50 @@ it("renders error when server returns network error", async () => {
    */
   expect((getByLabelText(loginFormLabels.password) as any).value).toBe(
     "123456"
+  );
+});
+
+it("blurs form while submitting", async () => {
+  const { ui, mockLoginUser } = renderComp();
+
+  mockLoginUser.mockRejectedValue(
+    new ApolloError({
+      networkError: new Error("network")
+    })
+  );
+
+  /**
+   * Given that we are using the login component
+   */
+
+  const { getByText, getByTestId } = render(ui);
+
+  /**
+   * Then the form should not be blurred
+   */
+  const $form = getByTestId(loginFormTestId);
+  expect($form.classList).not.toContain("form-submitting");
+
+  /**
+   * When we submit the form
+   */
+  fireEvent.click(getByText(loginSubmitButtonText));
+
+  /**
+   * Then the form should be blurred
+   */
+  expect($form.classList).toContain("form-submitting");
+
+  /**
+   * And a while later the form should no longer be blurred
+   */
+  await wait(
+    () => {
+      expect($form.classList).not.toContain("form-submitting");
+    },
+    {
+      interval: 1
+    }
   );
 });
 
