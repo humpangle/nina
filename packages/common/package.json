@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "prebuild": "rimraf dist",
     "start": "concurrently \"yarn generate:watch\" \"tsc -w\"",
     "prestart": "rimraf dist",
     "generate": "graphql-codegen",
