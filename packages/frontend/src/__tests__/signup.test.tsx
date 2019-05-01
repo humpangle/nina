@@ -11,7 +11,7 @@ import {
   formErrorTexts,
   formUiTexts
 } from "../components/Signup/signup";
-import { fillField } from "./utils";
+import { fillField, renderWithRouter } from "./utils";
 import { CreateUserInput } from "../apollo-generated";
 import { APP_WELCOME_PATH } from "../routing";
 import { ApolloError } from "apollo-client";
@@ -276,20 +276,20 @@ it("renders non JSON parse-able error", async () => {
 
 function renderComp() {
   const mockRegisterUser = jest.fn();
-  const mockNavigate = jest.fn();
   const mockUpdateLocalUser = jest.fn();
+
+  const { Ui, ...rest } = renderWithRouter(SignupP);
 
   return {
     ui: (
-      <SignupP
+      <Ui
         registerUser={mockRegisterUser}
-        navigate={mockNavigate}
         updateLocalUser={mockUpdateLocalUser}
       />
     ),
     mockRegisterUser,
-    mockNavigate,
-    mockUpdateLocalUser
+    mockUpdateLocalUser,
+    ...rest
   };
 }
 
