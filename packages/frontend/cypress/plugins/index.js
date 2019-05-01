@@ -10,7 +10,7 @@ const { createUser } = require("@nina/backend/dist/data/models");
 let conn;
 
 module.exports = (on, config) => {
-  const dbConfig = getTypeormConfigForConnection(config.env);
+  const dbConfig = getTypeormConfigForConnection();
 
   on("file:preprocessor", cypressTypeScriptPreprocessor);
 
