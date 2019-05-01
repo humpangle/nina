@@ -7,7 +7,7 @@ import { CSSTransition } from "react-transition-group";
 
 import "./styles.scss";
 import { headerUiText, Props, headerMenuToggleTestId } from "./header";
-import { ROOT_PATH, SIGNUP_PATH } from "../../routing";
+import { ROOT_PATH, SIGNUP_PATH, LOGIN_PATH } from "../../routing";
 
 export function Header(props: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -71,9 +71,11 @@ export function Header(props: Props) {
             {headerUiText.menuTexts.howItWorks}
           </Menu.Item>
 
-          <Menu.Item as={Link} to="/" className="header__menu-item">
-            {headerUiText.menuTexts.logIn}
-          </Menu.Item>
+          {pathname !== LOGIN_PATH && (
+            <Menu.Item as={Link} to={LOGIN_PATH} className="header__menu-item">
+              {headerUiText.menuTexts.logIn}
+            </Menu.Item>
+          )}
 
           {pathname !== SIGNUP_PATH && (
             <Menu.Item className="header__menu-item ">

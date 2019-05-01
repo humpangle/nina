@@ -11,7 +11,7 @@ import {
 } from "../components/Header/header";
 import { LogoImageQuery_file_childImageSharp_fixed } from "../graphql/gatsby-types/LogoImageQuery";
 import { renderWithRouter } from "./utils";
-import { SIGNUP_PATH } from "../routing";
+import { SIGNUP_PATH, LOGIN_PATH } from "../routing";
 
 jest.mock("react-transition-group", function() {
   const FakeTransition = jest.fn(({ children }) => children);
@@ -92,43 +92,42 @@ it("does not show link tag on logo when we are on home page", () => {
   expect(getByTestId("header-logo").nodeName).toBe("A");
 });
 
-it("does not show signup link when we are on home page", () => {
-  /**
-   *  Given that we are on the home page
-   */
-  const { Ui: Ui1 } = renderWithRouter(HeaderP);
-
-  /**
-   * And that we have the site header
-   */
-  const { getByTestId, queryByText, rerender, getByText } = render(
-    <Ui1 logoAttrs={logoAttrs} />
-  );
-
-  /**
-   * When we click on the menu toggle button
-   */
-  fireEvent.click(getByTestId(headerMenuToggleTestId));
-
-  /**
-   * Then we should see the signup link
-   */
+it("does not show signup link when we are on sign up page", () => {
   const text = headerUiText.menuTexts.signUp;
-  expect(getByText(text)).toBeInTheDocument();
 
   /**
-   * When we navigate to another page
+   * Given that we are at the app header on signup page
    */
-  const { Ui: Ui2 } = renderWithRouter(HeaderP, { path: SIGNUP_PATH });
-  rerender(<Ui2 logoAttrs={logoAttrs} />);
+  const { Ui } = renderWithRouter(HeaderP, { path: SIGNUP_PATH });
+  const { getByTestId, queryByText } = render(<Ui logoAttrs={logoAttrs} />);
 
   /**
-   * And click on menu toggle button
+   * When we click on menu toggle button
    */
   fireEvent.click(getByTestId(headerMenuToggleTestId));
 
   /**
-   * Then we should no longer see the sign up link
+   * Then we should not see the signup link
+   */
+  expect(queryByText(text)).not.toBeInTheDocument();
+});
+
+it("does not show login link when we are on login page", () => {
+  const text = headerUiText.menuTexts.logIn;
+
+  /**
+   * Given that we are at the app header on login page
+   */
+  const { Ui } = renderWithRouter(HeaderP, { path: LOGIN_PATH });
+  const { getByTestId, queryByText } = render(<Ui logoAttrs={logoAttrs} />);
+
+  /**
+   * When we click on menu toggle button
+   */
+  fireEvent.click(getByTestId(headerMenuToggleTestId));
+
+  /**
+   * Then we should not see the login link
    */
   expect(queryByText(text)).not.toBeInTheDocument();
 });
