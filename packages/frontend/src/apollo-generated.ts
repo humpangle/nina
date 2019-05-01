@@ -64,6 +64,14 @@ export type User = {
   jwt: Scalars["String"];
   credential: Credential;
 };
+export type LoginUserMutationVariables = {
+  input: LoginInput;
+};
+
+export type LoginUserMutation = { __typename?: "Mutation" } & {
+  login: { __typename?: "User" } & RegisterUserFragment;
+};
+
 export type RegisterUserFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "username" | "email" | "jwt"

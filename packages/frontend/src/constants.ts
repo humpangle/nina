@@ -7,6 +7,7 @@ export const SITE_TITLE = "Nina";
 export const THEME_COLOR = "#ff5b00";
 export const APP_WELCOME_TITLE = "Welcome";
 export const SIGNUP_TITLE = "Signup";
+export const LOGIN_TITLE = "Login";
 
 // istanbul ignore next:
 export function makeSiteTitle(title: string) {
