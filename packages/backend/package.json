@@ -18,6 +18,7 @@
     "build": "tsc",
     "build:test": "tsc --build tsconfig-base.json",
     "prebuild": "rimraf dist",
+    "prebuild:test": "rimraf dist",
     "test:js": "yarn build:test && env-cmd staging-test jest --config jest.config.staging.js --runInBand",
     "test:watch": "env-cmd test jest --config jest.config.dev.js --runInBand --watch",
     "test:coverage": "env-cmd test jest --config jest.config.dev.js --runInBand --coverage"
