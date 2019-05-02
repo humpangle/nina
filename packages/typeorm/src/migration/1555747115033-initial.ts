@@ -12,7 +12,7 @@ export class initial1555747115033 implements MigrationInterface {
             "encrypted_token" character varying NOT NULL,
             "inserted_at" TIMESTAMP NOT NULL DEFAULT now(),
             "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
-            "user_id" integer,
+            "user_id" integer NOT NULL,
             
             CONSTRAINT "REL_c68a6c53e95a7dc357f4ebce8f" UNIQUE ("user_id"), CONSTRAINT "PK_1e38bc43be6697cdda548ad27a6" PRIMARY KEY ("id")
         )`
