@@ -177,11 +177,13 @@ interface FormInputProps extends FieldProps<FormValues> {
 }
 
 function FormInputComp(prevProps: FormInputProps, nextProps: FormInputProps) {
+  // istanbul ignore next:
   const {
     field: { value: prevValue = null },
     shouldClearPassword: prevShouldClearPassword
   } = prevProps;
 
+  // istanbul ignore next:
   const {
     field: { value: nextValue = null },
     shouldClearPassword: nextShouldClearPassword
