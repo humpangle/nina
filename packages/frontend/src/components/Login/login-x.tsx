@@ -1,4 +1,4 @@
-import React, { Reducer, useReducer, Dispatch } from "react";
+import React, { Reducer, useReducer, Dispatch, memo } from "react";
 import { Formik, FormikProps, Field, FieldProps } from "formik";
 import { Form, Input, Button, Card, Message, Icon } from "semantic-ui-react";
 import { NavigateFn, WindowLocation } from "@reach/router";
@@ -29,6 +29,8 @@ import { SwitchAuthComponent } from "../SwitchAuthComponent";
 const reducer: Reducer<State, State> = function reducerFn(prevState, newState) {
   return { ...prevState, ...newState };
 };
+
+const FormInput = memo(FormInputFn, FormInputComp);
 
 export function Login(props: Props) {
   const [state, dispatch] = useReducer(reducer, {});
@@ -174,7 +176,24 @@ interface FormInputProps extends FieldProps<FormValues> {
   type?: string;
 }
 
-function FormInput(props: FormInputProps) {
+function FormInputComp(prevProps: FormInputProps, nextProps: FormInputProps) {
+  const {
+    field: { value: prevValue = null },
+    shouldClearPassword: prevShouldClearPassword
+  } = prevProps;
+
+  const {
+    field: { value: nextValue = null },
+    shouldClearPassword: nextShouldClearPassword
+  } = nextProps;
+
+  return (
+    prevValue === nextValue &&
+    prevShouldClearPassword === nextShouldClearPassword
+  );
+}
+
+function FormInputFn(props: FormInputProps) {
   const {
     type = "text",
     shouldClearPassword,
