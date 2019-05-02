@@ -94,7 +94,7 @@ describe("Sign up page", function() {
     cy.queryByTestId(loginErrorTestId).should("not.exist");
 
     /**
-     * And user submits the form
+     * When user submits the form
      */
     cy.getByText(loginSubmitButtonText).click();
 

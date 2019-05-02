@@ -17,7 +17,7 @@ describe("index page", function() {
     cy.stopSession();
   });
 
-  it("loads successfully", function() {
+  it("creates user and redirects to app page", function() {
     /**
      * Given a user is on the home page
      */
