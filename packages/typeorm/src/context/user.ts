@@ -1,8 +1,9 @@
 import { Connection } from "typeorm";
-import { Credential as OriginalCredential, ID, User } from "@nina/common";
+import { Credential as OriginalCredential, User } from "@nina/common";
 import { normalizeDbError } from "./utils";
 import { UserEntity } from "../entity/user";
 import { CredentialEntity } from "../entity/credential";
+import { makeAndWhere } from "./makeAndWhere";
 
 type Credential = OriginalCredential & {
   __user__: User | null; // added by typeorm leftJoinAndSelect
@@ -12,7 +13,7 @@ function getUserRepo(connection: Connection) {
   return connection.getRepository<User>(UserEntity);
 }
 
-function getCredentialRepo(connection: Connection) {
+export function getCredentialRepo(connection: Connection) {
   return connection.getRepository<Credential>(CredentialEntity);
 }
 
@@ -23,13 +24,13 @@ export async function createUser(
   try {
     const user = await getUserRepo(connection).save(input);
 
-    const repo = getCredentialRepo(connection);
+    const credentialRepo = getCredentialRepo(connection);
 
-    const credential = (await repo.save<Partial<Credential>>({
+    const credential = (await credentialRepo.save<Partial<Credential>>({
       encryptedToken
     })) as Credential;
 
-    await repo
+    await credentialRepo
       .createQueryBuilder()
       .relation("Credential", "user")
       .of(credential)
@@ -83,45 +84,29 @@ export async function login(
   return null;
 }
 
-export async function getUserById(connection: Connection, id: ID) {
-  return getUserRepo(connection).findOne(id);
-}
-
-export async function getUserByEmail(connection: Connection, email: string) {
+export async function getUserBy(
+  connection: Connection,
+  whereArgs: Partial<User>
+) {
   return getUserRepo(connection)
     .createQueryBuilder("user")
-    .where("user.email = :email", { email })
+    .where(makeAndWhere(whereArgs, "user"), whereArgs)
     .getOne();
 }
-
-// export function getCredentialByUserId(connection: Connection, userId: ID) {
-//   return getCredentialRepo(connection)
-//     .createQueryBuilder("credential")
-//     .where("credential.user_id = :userId", { userId })
-//     .getOne();
-// }
 
 export async function updateCredential(
   connection: Connection,
   whereArgs: Partial<Credential>,
   updateArgs: Partial<Credential>
 ) {
-  const where = Object.keys(whereArgs).reduce((acc, key) => {
-    const k = `${key} = :${key}`;
-
-    if (acc === "") {
-      return k;
-    }
-    return `${acc} AND ${k}`;
-  }, "");
-
-  const { raw } = await getCredentialRepo(connection)
+  const query = getCredentialRepo(connection)
     .createQueryBuilder()
     .update(CredentialEntity)
     .set(updateArgs)
-    .where(where, whereArgs)
-    .returning(Object.keys(updateArgs))
-    .execute();
+    .where(makeAndWhere(whereArgs), whereArgs)
+    .returning(Object.keys(updateArgs));
+
+  const { raw } = await query.execute();
 
   return raw.length === 0 ? false : true;
 }

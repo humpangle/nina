@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Connection } from "typeorm";
 
 import { ID, DEFAULT_JWT_EXPIRATION } from "@nina/common";
-import { getUserById } from "./models";
+import { getUserBy } from "./models";
 
 // istanbul ignore next
 const SECRET = process.env.SECRET || "";
@@ -15,7 +15,7 @@ if (!SECRET || SECRET.length < 3) {
 export async function userFromJwt(connection: Connection, token: string) {
   const { id: id } = (await jwt.verify(token, SECRET)) as { id: string };
 
-  return await getUserById(connection, id);
+  return await getUserBy(connection, { id });
 }
 
 export function idToJwt(id: ID, expiresIn: string = DEFAULT_JWT_EXPIRATION) {

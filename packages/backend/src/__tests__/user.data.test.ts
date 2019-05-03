@@ -18,16 +18,14 @@ jest.mock("@nina/typeorm/dist/context");
 import {
   dbCreateUser,
   dbLogin,
-  dbGetUserById,
-  dbGetUserByEmail,
+  dbGetUserBy,
   dbUpdateCredential
 } from "@nina/typeorm/dist/context";
 import { hashSync } from "../data/utils";
 
 const mockDbCreateUser = dbCreateUser as jest.Mock;
 const mockDbLogin = dbLogin as jest.Mock;
-const mockDbGetUserById = dbGetUserById as jest.Mock;
-const mockDbGetUserByEmail = dbGetUserByEmail as jest.Mock;
+const mockDbGetUserBy = dbGetUserBy as jest.Mock;
 const mockDbUpdateCredential = dbUpdateCredential as jest.Mock;
 
 const connection = (jest.fn() as unknown) as Connection;
@@ -64,8 +62,9 @@ describe("user creation", () => {
   });
 
   it("fails due to database error", async () => {
+    const message = '{"username":"already exists."}';
     mockDbCreateUser.mockRejectedValue({
-      message: '{"username":"already exists."}'
+      message
     });
     expect.assertions(1);
 
@@ -74,7 +73,7 @@ describe("user creation", () => {
      * Then user should see db error
      */
     return createUser(connection, USER_CREATION_ARGS).catch(error => {
-      expect(error.message).toEqual('{"username":"already exists."}');
+      expect(error.message).toEqual(message);
     });
   });
 });
@@ -188,7 +187,7 @@ describe("user login", () => {
 
 describe("user password recovery", () => {
   it("gets recovery token successfully", async () => {
-    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
+    mockDbGetUserBy.mockResolvedValue({ id: 1 });
 
     /**
      * When we ask for password recover token
@@ -202,7 +201,7 @@ describe("user password recovery", () => {
   });
 
   it("does not get a token because email not found in db", async () => {
-    mockDbGetUserByEmail.mockResolvedValue(null);
+    mockDbGetUserBy.mockResolvedValue(null);
     /**
      * Given we ask for password recovery token for a non existent email
      */
@@ -214,8 +213,8 @@ describe("user password recovery", () => {
   });
 
   it("resets password successfully", async () => {
-    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
-    mockDbGetUserById.mockResolvedValue({ id: 1 });
+    mockDbGetUserBy.mockResolvedValue({ id: 1 });
+    mockDbGetUserBy.mockResolvedValue({ id: 1 });
     mockDbUpdateCredential.mockResolvedValue(true);
 
     /**
@@ -250,7 +249,7 @@ describe("user password recovery", () => {
   });
 
   it("does not reset password because token expires", async () => {
-    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
+    mockDbGetUserBy.mockResolvedValue({ id: 1 });
 
     /**
      * Given our request for password reset token was successful
@@ -272,7 +271,7 @@ describe("user password recovery", () => {
   });
 
   it("does not reset password because password is invalid", async () => {
-    mockDbGetUserByEmail.mockResolvedValue({ id: 1 });
+    mockDbGetUserBy.mockResolvedValue({ id: 1 });
 
     expect.assertions(1);
     /**
@@ -294,7 +293,7 @@ describe("user password recovery", () => {
   });
 
   it("does not reset password because user not found", async () => {
-    mockDbGetUserById.mockResolvedValue(null);
+    mockDbGetUserBy.mockResolvedValue(null);
 
     /**
      * Given our request for password reset token was successful

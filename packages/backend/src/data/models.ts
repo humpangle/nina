@@ -11,17 +11,11 @@ import {
   INVALID_INPUT_ERROR_TITLE,
   INVALID_LOGIN_INPUT_ERROR
 } from "@nina/common";
-import {
-  dbCreateUser,
-  dbLogin,
-  dbGetUserById,
-  dbGetUserByEmail,
-  dbUpdateCredential
-} from ".";
+import { dbCreateUser, dbLogin, dbGetUserBy, dbUpdateCredential } from ".";
 import { verifyHashSync, hashSync } from "./utils";
 import { idToJwt, userFromJwt } from "./jwt";
 
-export const getUserById = dbGetUserById;
+export const getUserBy = dbGetUserBy;
 
 export async function createUser(
   connection: Connection,
@@ -72,7 +66,7 @@ export async function getPasswordRecoveryToken(
   email: string,
   expiresIn: string = DEFAULT_PASSWORD_TOKEN_EXPIRATION
 ) {
-  const user = await dbGetUserByEmail(connection, email);
+  const user = await dbGetUserBy(connection, { email });
 
   if (user) {
     return idToJwt(user.id, expiresIn);

@@ -1,8 +1,15 @@
 import { Connection } from "typeorm";
 
-import { createUser, login } from "../context/user";
+import {
+  createUser,
+  login,
+  getUserBy,
+  getCredentialRepo,
+  updateCredential
+} from "../context/user";
 import { USER_CREATION_ARGS, connectToDb } from "./utils";
 import { Credential, User } from "@nina/common";
+import { makeAndWhere } from "../context/makeAndWhere";
 
 let connection: Connection;
 
@@ -158,5 +165,185 @@ describe("user login", () => {
     });
 
     expect(result).toBeNull();
+  });
+});
+
+describe("miscellaneous", () => {
+  it("gets user by various columns", async () => {
+    /**
+     * Given a user exists in the system
+     */
+
+    const user = await createUser(connection, USER_CREATION_ARGS);
+
+    /**
+     * When we get the user by id
+     */
+    const gottenUser = (await getUserBy(connection, {
+      id: user.id,
+      email: user.email
+    })) as User;
+
+    /**
+     * Then user Id should exist
+     */
+    expect(gottenUser.id).toBeDefined();
+
+    /**
+     * And created user's credential should exist
+     */
+    expect(user.credential).toBeTruthy();
+  });
+
+  it('makes "and where clause" without prefix ', () => {
+    /**
+     * Given an object
+     */
+    const args = { id: 1, email: 2 };
+
+    /**
+     * Then we should be able to turn it into "and where clause" without prefix
+     */
+    expect(makeAndWhere(args)).toEqual("id = :id AND email = :email");
+  });
+
+  it('makes "and where clause" with prefix ', () => {
+    /**
+     * Given an object
+     */
+    const args = { id: 1, email: 2 };
+
+    /**
+     * Then we should be able to turn it into "and where clause" with prefix
+     */
+    expect(makeAndWhere(args, "user")).toEqual(
+      "user.id = :id AND user.email = :email"
+    );
+  });
+
+  it('makes "and where clause" but removes keys with undefined values', () => {
+    /**
+     * Given an object
+     */
+    const args = { id: 1, email: undefined, password: undefined };
+
+    /**
+     * Then we should be able to turn it into "and where clause" without prefix
+     */
+    expect(makeAndWhere(args)).toEqual("id = :id");
+  });
+
+  it("updates credential successfully", async () => {
+    /**
+     * Given credential exists in the system
+     */
+    const user = await createUser(connection, USER_CREATION_ARGS);
+
+    /**
+     * When we compose a query to get the credential from database
+     * through user id
+     */
+    const queryArgs = { user_id: user.id };
+    const query = getCredentialRepo(connection)
+      .createQueryBuilder("credential")
+      .where(makeAndWhere(queryArgs, "credential"), queryArgs);
+
+    /**
+     * And we run the query
+     */
+    const credential = (await query.getOne()) as Credential;
+
+    /**
+     * Then queried credential's token should be the same as one with which
+     * credential was created
+     */
+    expect(credential.encryptedToken).toEqual(
+      USER_CREATION_ARGS.encryptedToken
+    );
+
+    /**
+     * When we update the credential with new encrypted token
+     */
+    const updatedEncryptedToken = "534555";
+
+    const result = await updateCredential(connection, queryArgs, {
+      encryptedToken: updatedEncryptedToken
+    });
+
+    /**
+     * Then the result should be true
+     */
+    expect(result).toBe(true);
+
+    /**
+     * When we select the credential again using same query
+     */
+    const updatedCredential = (await query.getOne()) as Credential;
+
+    /**
+     * Then updated credential's updated token should be the same as the new
+     * encryption token
+     */
+    expect(updatedCredential.encryptedToken).toEqual(updatedEncryptedToken);
+  });
+
+  it("fails while updating credential", async () => {
+    /**
+     * Given credential exists in the system
+     */
+    const user = await createUser(connection, USER_CREATION_ARGS);
+
+    /**
+     * When we compose a query to get the credential from database
+     * through user id
+     */
+    const queryArgs = { user_id: user.id };
+    const query = getCredentialRepo(connection)
+      .createQueryBuilder("credential")
+      .where(makeAndWhere(queryArgs, "credential"), queryArgs);
+
+    /**
+     * And we run the query
+     */
+    const credential = (await query.getOne()) as Credential;
+
+    /**
+     * Then queried credential's token should be the same as one with which
+     * credential was created
+     */
+    expect(credential.encryptedToken).toEqual(
+      USER_CREATION_ARGS.encryptedToken
+    );
+
+    /**
+     * When we update the credential with new encrypted token but with none
+     * existing user
+     */
+    const updatedEncryptedToken = "534555";
+
+    const result = await updateCredential(
+      connection,
+      { user_id: 0 },
+      {
+        encryptedToken: updatedEncryptedToken
+      }
+    );
+
+    /**
+     * Then the result should be false
+     */
+    expect(result).toBe(false);
+
+    /**
+     * When we select the credential again using same query
+     */
+    const sameCredential = (await query.getOne()) as Credential;
+
+    /**
+     * Then the token should not be updated
+     */
+    expect(sameCredential.encryptedToken).toEqual(
+      USER_CREATION_ARGS.encryptedToken
+    );
   });
 });

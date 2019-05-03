@@ -1,8 +1,6 @@
 export {
   createUser as dbCreateUser,
   login as dbLogin,
-  getUserById as dbGetUserById,
-  getUserByEmail as dbGetUserByEmail,
-  // getCredentialByUserId as dbGetCredentialByUserId,
+  getUserBy as dbGetUserBy,
   updateCredential as dbUpdateCredential
 } from "./user";
