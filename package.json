@@ -4,10 +4,13 @@
     "packages/*"
   ],
   "scripts": {
-    "test-e2e-run-staging": "concurrently \"yarn workspace @nina/backend start:staging-test\" \"yarn workspace @nina/frontend test-e2e-run-staging\"",
-    "build:all": "yarn workspace @nina/common build && yarn workspace @nina/typeorm build && yarn workspace @nina/backend build"
+    "test:e2e-staging": "yarn workspace @nina/common build && yarn workspace @nina/typeorm build && concurrently \"yarn workspace @nina/backend start:staging-test\" \"yarn workspace @nina/frontend start:staging\"",
+    "test-e2e-run-staging": "start-server-and-test test:e2e-staging :3985 cy-run-staging",
+    "build:all": "yarn workspace @nina/common build && yarn workspace @nina/typeorm build && yarn workspace @nina/backend build",
+    "cy-run-staging": "yarn workspace @nina/frontend cy-run-staging"
   },
   "devDependencies": {
-    "concurrently": "4.1.0"
+    "concurrently": "4.1.0",
+    "start-server-and-test": "1.9.0"
   }
 }
