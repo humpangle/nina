@@ -21,7 +21,7 @@ module.exports = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   testPathIgnorePatterns: [
     "node_modules",
-    ".cache",
+    "\\.cache",
     "^.+\\.module\\.(css|sass|scss)$"
   ],
   transformIgnorePatterns: ["node_modules/(?!(gatsby)/)"],
@@ -39,6 +39,8 @@ module.exports = {
     "<rootDir>/cypress/",
     "<rootDir>/package.json",
     "<rootDir>/gatsby-*",
-    "<rootDir>/src/pages/"
+    "<rootDir>/src/pages/",
+    "<rootDir>/\\.cache/",
+    "<rootDir>/public/"
   ]
 };
