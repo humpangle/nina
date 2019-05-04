@@ -25,11 +25,10 @@ input LoginInput {
 }
 `;
 
-export const userQuery = `
-me(username: String, email: String, id: ID): User
-`;
-
 export const userMutation = `
-createUser(input: CreateUserInput!): User!
-login(input: LoginInput!): User!
+  createUser(input: CreateUserInput!): User!
+
+  login(input: LoginInput!): User!
+
+  requestPasswordReset(email: String!): String!
 `;

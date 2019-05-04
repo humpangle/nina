@@ -34,6 +34,7 @@ export type LoginInput = {
 export type Mutation = {
   createUser: User;
   login: User;
+  requestPasswordReset: Scalars["String"];
 };
 
 export type MutationCreateUserArgs = {
@@ -42,6 +43,10 @@ export type MutationCreateUserArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+export type MutationRequestPasswordResetArgs = {
+  email: Scalars["String"];
 };
 
 export type Query = {
@@ -189,6 +194,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     MutationLoginArgs
+  >;
+  requestPasswordReset?: Resolver<
+    ResolversTypes["String"],
+    ParentType,
+    ContextType,
+    MutationRequestPasswordResetArgs
   >;
 };
 
