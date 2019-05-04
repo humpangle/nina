@@ -1,0 +1,29 @@
+@import "../../styles/variables";
+
+.components-request-password-reset {
+  @extend %auth-component;
+
+  .initial-instruction {
+    margin-bottom: 20px;
+  }
+
+  .success-card {
+    position: relative;
+  }
+
+  .to-login-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 1.1rem;
+    color: green;
+    cursor: pointer;
+    padding: 5px 20px 30px 20px;
+  }
+
+  .success-card__content {
+    margin-top: 50px !important;
+    border: none !important;
+    text-align: center;
+  }
+}

@@ -8,6 +8,7 @@ export const THEME_COLOR = "#ff5b00";
 export const APP_WELCOME_TITLE = "Welcome";
 export const SIGNUP_TITLE = "Signup";
 export const LOGIN_TITLE = "Login";
+export const RESET_PASSWORD_TITLE = "Reset Password";
 
 // istanbul ignore next:
 export function makeSiteTitle(title: string) {

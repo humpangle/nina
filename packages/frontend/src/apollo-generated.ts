@@ -34,6 +34,7 @@ export type LoginInput = {
 export type Mutation = {
   createUser: User;
   login: User;
+  requestPasswordReset: Scalars["String"];
 };
 
 export type MutationCreateUserArgs = {
@@ -42,6 +43,10 @@ export type MutationCreateUserArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+export type MutationRequestPasswordResetArgs = {
+  email: Scalars["String"];
 };
 
 export type Query = {
@@ -84,3 +89,12 @@ export type RegisterUserMutationVariables = {
 export type RegisterUserMutation = { __typename?: "Mutation" } & {
   createUser: { __typename?: "User" } & RegisterUserFragment;
 };
+
+export type RequestPasswordResetMutationVariables = {
+  email: Scalars["String"];
+};
+
+export type RequestPasswordResetMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "requestPasswordReset"
+>;
