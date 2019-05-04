@@ -13,7 +13,7 @@ import {
 } from "@nina/common";
 import { dbCreateUser, dbLogin, dbGetUserBy, dbUpdateCredential } from ".";
 import { verifyHashSync, hashSync } from "./utils";
-import { idToJwt, userFromJwt } from "./jwt";
+import { userFromJwt } from "./jwt";
 
 export const getUserBy = dbGetUserBy;
 
@@ -57,22 +57,6 @@ export async function login(
   }
 
   return user;
-}
-
-const DEFAULT_PASSWORD_TOKEN_EXPIRATION = "24 hours";
-
-export async function getPasswordRecoveryToken(
-  connection: Connection,
-  email: string,
-  expiresIn: string = DEFAULT_PASSWORD_TOKEN_EXPIRATION
-) {
-  const user = await dbGetUserBy(connection, { email });
-
-  if (user) {
-    return idToJwt(user.id, expiresIn);
-  }
-
-  return null;
 }
 
 export async function resetPassword(

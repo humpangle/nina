@@ -1,6 +1,8 @@
 import { Resolvers, MutationResolvers } from "@nina/common";
+
 import { createUser, login } from "../data/models";
 import { idToJwt } from "../data/jwt";
+import { getPasswordRecoveryToken } from "../data/getPasswordRecoveryToken";
 
 const createUserResolver: MutationResolvers["createUser"] = function createUserResolverFn(
   root,
@@ -17,11 +19,19 @@ const loginResolver: MutationResolvers["login"] = function loginResolverFn(
 ) {
   return login(connection, input);
 };
+const requestPasswordResetResolver: MutationResolvers["requestPasswordReset"] = function requestPasswordResetResolverFn(
+  root,
+  { email },
+  { connection }
+) {
+  return getPasswordRecoveryToken(connection, email);
+};
 
 export const userResolver: Resolvers = {
   Mutation: {
     createUser: createUserResolver,
-    login: loginResolver
+    login: loginResolver,
+    requestPasswordReset: requestPasswordResetResolver
   },
 
   User: {

@@ -6,7 +6,7 @@ import { ApolloServer } from "apollo-server-express";
 import { DocumentNode } from "graphql";
 import { createServer } from "http";
 
-import { schema } from "@nina/common";
+import { schema } from "@nina/common/dist/graphql/schema.graphql";
 import { userResolver } from "./graphql/user.resolver";
 
 const IS_TEST = process.env.NODE_ENV === "test";

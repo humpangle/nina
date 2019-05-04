@@ -6,7 +6,8 @@ import {
   USER_CREATION_ARGS,
   LOGIN_USER_MUTATION,
   connectToDb,
-  DB_USER_CREATION_ARGS
+  DB_USER_CREATION_ARGS,
+  REQUEST_PASSWORD_RESET_MUTATION
 } from "./utils";
 import { setupServer } from "../server-setup";
 import {
@@ -16,9 +17,15 @@ import {
   MutationLoginArgs
 } from "@nina/common";
 import { dbCreateUser } from "../data";
+import { MutationRequestPasswordResetArgs } from "@nina/common/dist/graphql/types";
+import { USER_DOES_NOT_EXIST_ERROR_TEXT } from "../data/constants";
 
 let connection: Connection;
 let stopServer: () => void;
+
+// this test file runs too slowly the first time for reasons
+// I can't put my fingers on
+jest.setTimeout(10000);
 
 afterEach(() => {
   if (connection) {
@@ -120,10 +127,55 @@ describe("login user", () => {
   });
 });
 
+describe("request password reset", () => {
+  it("succeeds", async () => {
+    /**
+     * Given there is a user in the system
+     */
+    const { query } = await setup();
+    const user = await dbCreateUser(connection, DB_USER_CREATION_ARGS);
+
+    /**
+     * When we request for password reset for the user
+     */
+    const result = await query({
+      query: REQUEST_PASSWORD_RESET_MUTATION,
+      variables: {
+        email: user.email
+      } as MutationRequestPasswordResetArgs
+    });
+
+    /**
+     * Then we should get password reset token
+     */
+    expect(result.data.requestPasswordReset.length).toBeGreaterThan(2);
+  });
+
+  it("fails", async () => {
+    const { query } = await setup();
+
+    /**
+     * When we request for password reset for email not in the system
+     */
+    const result = await query({
+      query: REQUEST_PASSWORD_RESET_MUTATION,
+      variables: {
+        email: "a@b.com"
+      } as MutationRequestPasswordResetArgs
+    });
+
+    /**
+     * Then we should get error
+     */
+    expect(result.errors[0].message).toMatch(USER_DOES_NOT_EXIST_ERROR_TEXT);
+  });
+});
+
 async function setup(useDb: boolean = true) {
   connection = (useDb
     ? await connectToDb()
     : { close: jest.fn() }) as Connection;
+
   const { webServer } = setupServer(connection);
   const { stop, doQuery } = startLiveTestServer(webServer);
   stopServer = stop;

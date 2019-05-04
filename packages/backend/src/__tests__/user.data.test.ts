@@ -1,17 +1,13 @@
 import { Connection } from "typeorm";
 
-import {
-  createUser,
-  login,
-  getPasswordRecoveryToken,
-  resetPassword
-} from "../data/models";
+import { createUser, login, resetPassword } from "../data/models";
 import {
   PASSWORD_TOO_SHORT_ERROR,
   INVALID_LOGIN_INPUT_ERROR
 } from "@nina/common";
 import { USER_CREATION_ARGS, DB_USER_CREATION_ARGS } from "./utils";
 import { idToJwt } from "../data/jwt";
+import { getPasswordRecoveryToken } from "../data/getPasswordRecoveryToken";
 
 jest.mock("@nina/typeorm/dist/context");
 
@@ -22,6 +18,7 @@ import {
   dbUpdateCredential
 } from "@nina/typeorm/dist/context";
 import { hashSync } from "../data/utils";
+import { USER_DOES_NOT_EXIST_ERROR_TEXT } from "../data/constants";
 
 const mockDbCreateUser = dbCreateUser as jest.Mock;
 const mockDbLogin = dbLogin as jest.Mock;
@@ -200,16 +197,17 @@ describe("user password recovery", () => {
     expect(token.length).toBeGreaterThan(2);
   });
 
-  it("does not get a token because email not found in db", async () => {
+  it("does not get a token because email not found in db", () => {
+    expect.assertions(1);
     mockDbGetUserBy.mockResolvedValue(null);
     /**
      * Given we ask for password recovery token for a non existent email
      */
-    const token = await getPasswordRecoveryToken(connection, "a@b.com");
-    /**
-     * Then received token should not exist
-     */
-    expect(token).toBeNull();
+    return getPasswordRecoveryToken(connection, "a@b.com", "0.001").catch(
+      error => {
+        expect(error.message).toMatch(USER_DOES_NOT_EXIST_ERROR_TEXT);
+      }
+    );
   });
 
   it("resets password successfully", async () => {

@@ -41,6 +41,12 @@ export const LOGIN_USER_MUTATION = gql`
   }
 `;
 
+export const REQUEST_PASSWORD_RESET_MUTATION = gql`
+  mutation RequestPasswordReset($email: String!) {
+    requestPasswordReset(email: $email)
+  }
+`;
+
 export function startLiveTestServer(webServer: Server) {
   const server = webServer.listen(0);
   const { port } = server.address() as AddressInfo;
