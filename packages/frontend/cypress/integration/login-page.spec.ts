@@ -11,7 +11,7 @@ import {
   loginErrorTestId
 } from "../../src/components/Login/login";
 
-describe("Sign up page", function() {
+describe("Login page", function() {
   beforeEach(() => {
     cy.startSession();
   });

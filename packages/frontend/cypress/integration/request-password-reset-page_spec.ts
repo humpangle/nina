@@ -7,7 +7,7 @@ import {
   gqlErrorText
 } from "../../src/components/RequestPasswordReset/request-password-reset";
 
-describe("request password reset page", function() {
+describe("Request password reset page", function() {
   beforeEach(() => {
     cy.startSession();
   });
@@ -16,7 +16,7 @@ describe("request password reset page", function() {
     cy.stopSession();
   });
 
-  it("requests password reset successfully", function() {
+  it("succeeds", function() {
     /**
      * Given a user exists in the system
      */
@@ -53,7 +53,7 @@ describe("request password reset page", function() {
     cy.getByText(resetPasswordRequestSuccessRegexp).should("exist");
   });
 
-  it.skip("it fails when we request for password reset", function() {
+  it.skip("fails if user does not exist", function() {
     /**
      * Given we are on the password reset request page
      */
